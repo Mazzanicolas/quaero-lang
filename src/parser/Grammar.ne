@@ -19,6 +19,7 @@ import {
   Multiplication,
   Division,
   Negation,
+  NegationNumber,
   Numeral,
   String,
   Sequence,
@@ -58,7 +59,7 @@ exp ->
 
 comp ->
     comp "==" addsub        {% ([lhs, , rhs]) => (new CompareEqual(lhs, rhs)) %}
-  | comp "!=" addsub        {% ([lhs, , rhs]) => (new CompareNotEqual(lhs, rhs)) %}
+  | comp "/=" addsub        {% ([lhs, , rhs]) => (new CompareNotEqual(lhs, rhs)) %}
   | comp "<=" addsub        {% ([lhs, , rhs]) => (new CompareLessOrEqual(lhs, rhs)) %}
   | comp "<" addsub         {% ([lhs, , rhs]) => (new CompareLess(lhs, rhs)) %}
   | comp ">=" addsub        {% ([lhs, , rhs]) => (new CompareGreatOrEqual(lhs, rhs)) %}
@@ -66,7 +67,8 @@ comp ->
   | addsub                  {% id %}
 
 addsub ->
-    addsub "+" muldiv       {% ([lhs, , rhs]) => (new Addition(lhs, rhs)) %}
+    "-" muldiv              {% ([, rhs]) => (new NegationNumber(rhs)) %}
+  | addsub "+" muldiv       {% ([lhs, , rhs]) => (new Addition(lhs, rhs)) %}
   | addsub "-" muldiv       {% ([lhs, , rhs]) => (new Substraction(lhs, rhs)) %}
   | muldiv                  {% id %}
 

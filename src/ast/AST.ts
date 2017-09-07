@@ -14,6 +14,7 @@ export * from './Index';
 export * from './Numeral';
 export * from './String';
 export * from './Substraction';
+export * from './NegationNumber';
 export * from './Variable';
 
 // BExp
