@@ -27,3 +27,4 @@ export * from './Conjunction';
 export * from './Disjunction';
 export * from './Negation';
 export * from './TruthValue';
+export * from './Null';

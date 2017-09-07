@@ -24,6 +24,7 @@ import {
   Sequence,
   Substraction,
   TruthValue,
+  Null,
   Variable
 } from '../ast/AST';
 
@@ -85,8 +86,11 @@ value ->
   | "false"                 {% () => (new TruthValue(false)) %}
   | literals                {% ([literal]) => (new String(literal))%}
   | identifier              {% ([id]) => (new Variable(id)) %}
-
+  | nullo                   {% ([id]) => (new Null(id))%}
 # Atoms
+
+nullo ->
+   "null"                   {% ([id]) => (id.value) %}
 
 identifier ->
     %identifier             {% ([id]) => (id.value) %}
