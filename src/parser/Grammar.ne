@@ -95,5 +95,8 @@ number ->
     %integer                {% ([id]) => (id.value) %}
   | %hex                    {% ([id]) => (id.value) %}
   | %float                  {% ([id]) => (id.value) %}
+  | %infinity               {% ([id]) => (id.value) %}
+  | %nan                    {% ([id]) => (id.value) %}
+
 literals ->
   %literal                  {% ([id]) => (id.value) %}
