@@ -17,7 +17,6 @@ export * from './String';
 export * from './Substraction';
 export * from './NegationNumber';
 export * from './Variable';
-
 // BExp
 export * from './CompareEqual';
 export * from './CompareNotEqual';
@@ -30,3 +29,5 @@ export * from './Disjunction';
 export * from './Negation';
 export * from './TruthValue';
 export * from './Null';
+
+export * from './List';

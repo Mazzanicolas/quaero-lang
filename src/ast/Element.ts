@@ -21,8 +21,9 @@ export class Element implements Stmt  {
     return `${this.key} : { ${this.value.unparse()} }`;
   }
 
-  evaluate(state: State): State {
-    state.set(this.key,this.value.evaluate(state));
-    return state;
+  evaluate(state: State): any {
+    var key = this.key, obj = {};
+    obj[key] = this.value.evaluate(state);
+    return  obj;
   }
 }

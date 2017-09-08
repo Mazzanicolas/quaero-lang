@@ -27,7 +27,8 @@ import {
   TruthValue,
   Null,
   Variable,
-  Element
+  Element,
+  List
 } from '../ast/AST';
 
 import { tokens } from './Tokens';
@@ -47,9 +48,21 @@ stmt ->
 
 stmtelse ->
     identifier "=" exp ";"                {% ([id, , exp, ]) => (new Assignment(id, exp)) %}
-  | literals ":" value ";"                {% ([key, , value, ]) => (new Element(key, value)) %} #hay que bajarlo
   | "{" stmt:* "}"                        {% ([, statements, ]) => (new Sequence(statements)) %}
   | "if" exp "then" stmtelse "else" stmt  {% ([, cond, , thenBody, , elseBody]) => (new IfThenElse(cond, thenBody, elseBody)) %}
+
+#Lists
+list ->
+   "[" elements "]"        {% id %}
+  | "[" "]"                {% ([,]) => (new List([])) %}#null es epsilon. Esta bien? si uso element -> null estaria permitiendo [,] deberia?
+
+elements ->
+   element "," elements    {% ([element,elements]) => (element.push(elements)) %}#por derecha para que no se nos chanflee la cosa (el orden)
+  | element                {% ([element]) => (new List([element])) %}
+
+element ->
+   subValue ":" exp        {% ([key, , exp, ]) => (new Element(key, exp)) %} #Que es mejor? a) crear dos producciones una para literales y otra para indentificadores b) hacer un subgrupo en values c) que sea value : value
+  | exp                    {% id %}
 
 # Expressions
 
@@ -69,14 +82,14 @@ comp ->
   | addsub                  {% id %}
 
 addsub ->
-    "-" muldiv              {% ([, rhs]) => (new NegationNumber(rhs)) %}
-  | addsub "+" muldiv       {% ([lhs, , rhs]) => (new Addition(lhs, rhs)) %}
+    addsub "+" muldiv       {% ([lhs, , rhs]) => (new Addition(lhs, rhs)) %}
   | addsub "-" muldiv       {% ([lhs, , rhs]) => (new Substraction(lhs, rhs)) %}
   | muldiv                  {% id %}
 
 muldiv ->
     muldiv "*" neg          {% ([lhs, , rhs]) => (new Multiplication(lhs, rhs)) %}
   | muldiv "/" neg          {% ([lhs, , rhs]) => (new Division(lhs, rhs)) %}
+  | "-" muldiv              {% ([, rhs]) => (new NegationNumber(rhs)) %}
   | neg                     {% id %}
 
 neg ->
@@ -88,9 +101,12 @@ value ->
   | number                  {% ([num]) => (new Numeral(num)) %}
   | "true"                  {% () => (new TruthValue(true)) %}
   | "false"                 {% () => (new TruthValue(false)) %}
-  | literals                {% ([literal]) => (new String(literal))%}
-  | identifier              {% ([id]) => (new Variable(id)) %}
   | nullo                   {% ([id]) => (new Null(id))%}
+  | list
+
+subValue -> #Esto tiene sentido siempre cuando no exista una subdivision con parte de esto y algo de value
+   literals                {% ([literal]) => (new String(literal))%}
+  | identifier              {% ([id]) => (new Variable(id)) %}
 # Atoms
 
 nullo ->
