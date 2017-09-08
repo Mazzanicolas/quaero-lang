@@ -69,7 +69,7 @@ element ->
 exp ->
     exp "&&" comp           {% ([lhs, , rhs]) => (new Conjunction(lhs, rhs)) %}
   | exp "||" comp           {% ([lhs, , rhs]) => (new Disjunction(lhs, rhs)) %}
-  | exp "[" exp "]"         {% ([ex,,index,])=> (new Index(ex,index)) %}
+  | exp "[" exp "]"         {% ([ex, ,index,]) => (new Index(ex,index)) %}
   | comp                    {% id %}
 
 comp ->
@@ -101,7 +101,7 @@ value ->
   | number                  {% ([num]) => (new Numeral(num)) %}
   | "true"                  {% () => (new TruthValue(true)) %}
   | "false"                 {% () => (new TruthValue(false)) %}
-  | nullo                   {% ([id]) => (new Null(id))%}
+  | "null"                  {% () => (new Null())%}
   | list                    {% id %}
   | subValue                {% id %}
 
@@ -109,10 +109,6 @@ subValue -> #Esto tiene sentido siempre cuando no exista una subdivision con par
    literals                {% ([literal]) => (new String(literal))%}
   | identifier              {% ([id]) => (new Variable(id)) %}
 # Atoms
-
-nullo ->
-   "null"                   {% ([id]) => (id.value) %}
-
 identifier ->
     %identifier             {% ([id]) => (id.value) %}
 

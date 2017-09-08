@@ -6,7 +6,7 @@ import { State } from '../interpreter/State';
 */
 export class Null implements Exp {
 
-  constructor(value: null) {
+  constructor() {
   }
 
   toString(): string {
