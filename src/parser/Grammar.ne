@@ -26,7 +26,8 @@ import {
   Substraction,
   TruthValue,
   Null,
-  Variable
+  Variable,
+  Element
 } from '../ast/AST';
 
 import { tokens } from './Tokens';
@@ -46,6 +47,7 @@ stmt ->
 
 stmtelse ->
     identifier "=" exp ";"                {% ([id, , exp, ]) => (new Assignment(id, exp)) %}
+  | literals ":" value ";"                {% ([key, , value, ]) => (new Element(key, value)) %} #hay que bajarlo
   | "{" stmt:* "}"                        {% ([, statements, ]) => (new Sequence(statements)) %}
   | "if" exp "then" stmtelse "else" stmt  {% ([, cond, , thenBody, , elseBody]) => (new IfThenElse(cond, thenBody, elseBody)) %}
 

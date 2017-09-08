@@ -6,6 +6,7 @@ export * from './Assignment';
 export * from './IfThenElse';
 export * from './IfThen';
 export * from './Sequence';
+export * from './Element';
 // AExp
 export * from './Addition';
 export * from './Multiplication';
