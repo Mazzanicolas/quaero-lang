@@ -53,15 +53,15 @@ stmtelse ->
 
 #Lists
 list ->
-   "[" elements "]"        {% id %}
+   "[" elements "]"        {% ([,elem,]) => (elem) %}
   | "[" "]"                {% ([,]) => (new List([])) %}#null es epsilon. Esta bien? si uso element -> null estaria permitiendo [,] deberia?
 
 elements ->
-   element "," elements    {% ([element,elements]) => (element.push(elements)) %}#por derecha para que no se nos chanflee la cosa (el orden)
+   element "," elements    {% ([element, ,elements]) => (elements.push(element)) %}#por derecha para que no se nos chanflee la cosa (el orden)
   | element                {% ([element]) => (new List([element])) %}
 
 element ->
-   subValue ":" exp        {% ([key, , exp, ]) => (new Element(key, exp)) %} #Que es mejor? a) crear dos producciones una para literales y otra para indentificadores b) hacer un subgrupo en values c) que sea value : value
+   subValue ":" exp        {% ([key, , exp]) => (new Element(key, exp)) %} #Que es mejor? a) crear dos producciones una para literales y otra para indentificadores b) hacer un subgrupo en values c) que sea value : value
   | exp                    {% id %}
 
 # Expressions
@@ -102,7 +102,8 @@ value ->
   | "true"                  {% () => (new TruthValue(true)) %}
   | "false"                 {% () => (new TruthValue(false)) %}
   | nullo                   {% ([id]) => (new Null(id))%}
-  | list
+  | list                    {% id %}
+  | subValue                {% id %}
 
 subValue -> #Esto tiene sentido siempre cuando no exista una subdivision con parte de esto y algo de value
    literals                {% ([literal]) => (new String(literal))%}

@@ -13,15 +13,14 @@ export class List implements Exp {
   }
 
   toString(): string {
-    return ``;
+    return `List()`;
   }
 
   unparse(): string {
-    return ``;
+    return `List()`;
   }
 
   evaluate(state: State):[any]|undefined[] {// [a:2,"r":true]
-      console.log(this.elementList);
       return this.elementList;
   }
 }
