@@ -103,11 +103,14 @@ value ->
   | "false"                 {% () => (new TruthValue(false)) %}
   | "null"                  {% () => (new Null())%}
   | list                    {% id %}
-  | subValue                {% id %}
+  | literals                {% ([literal]) => (new String(literal))%}
+  | identifier              {% ([id]) => (new Variable(id)) %}
+
 
 subValue -> #Esto tiene sentido siempre cuando no exista una subdivision con parte de esto y algo de value
    literals                 {% ([literal]) => (new String(literal))%}
-  | identifier              {% ([id]) => (new Variable(id)) %}
+  | identifier              {% ([id]) => (new String(id)) %}
+
 # Atoms
 identifier ->
     %identifier             {% ([id]) => (id.value) %}
