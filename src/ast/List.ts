@@ -10,6 +10,7 @@ export class List implements Exp {
 
   constructor(elementList:[any]|undefined[]) {
     this.elementList = elementList;
+    console.log(typeof elementList);
   }
 
   toString(): string {
@@ -18,6 +19,11 @@ export class List implements Exp {
 
   unparse(): string {
     return `List()`;
+  }
+
+  pushList(element:any):any{
+    this.elementList.push(element);
+    return this;
   }
 
   evaluate(state: State):[any]|undefined[] {// [a:2,"r":true]

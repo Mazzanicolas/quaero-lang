@@ -106,7 +106,7 @@ value ->
   | subValue                {% id %}
 
 subValue -> #Esto tiene sentido siempre cuando no exista una subdivision con parte de esto y algo de value
-   literals                {% ([literal]) => (new String(literal))%}
+   literals                 {% ([literal]) => (new String(literal))%}
   | identifier              {% ([id]) => (new Variable(id)) %}
 # Atoms
 identifier ->
