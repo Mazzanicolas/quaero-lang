@@ -4,7 +4,7 @@ import { State } from '../interpreter/State';
 /**
   Representación de constantes numéricas o numerales.
 */
-export class String implements Exp {
+export class QString implements Exp {
 
   value: string;
 
@@ -13,7 +13,7 @@ export class String implements Exp {
   }
 
   toString(): string {
-    return `String(${this.value})`;
+    return `QString(${this.value})`;
   }
 
   unparse(): string {

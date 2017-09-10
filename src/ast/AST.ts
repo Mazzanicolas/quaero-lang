@@ -13,7 +13,7 @@ export * from './Multiplication';
 export * from './Division';
 export * from './Index';
 export * from './Numeral';
-export * from './String';
+export * from './QString';
 export * from './Substraction';
 export * from './NegationNumber';
 export * from './Variable';
@@ -31,3 +31,4 @@ export * from './TruthValue';
 export * from './Null';
 
 export * from './QList';
+export * from './QSet';

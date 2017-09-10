@@ -1,14 +1,14 @@
 import { Exp, Stmt } from './ASTNode';
 import { State } from '../interpreter/State';
-
+import { QString } from  './AST';
 /**
   Representación de las sentencias condicionales.
 */
 export class Element implements Stmt  {
-  key: string;
+  key: QString;
   value: Exp;
 
-  constructor(key: string, value: Stmt) {
+  constructor(key: QString, value: Stmt) {
     this.key = key;
     this.value = value;
   }
@@ -22,7 +22,8 @@ export class Element implements Stmt  {
   }
 
   evaluate(state: State): any {
-    var key = this.key, obj = {};
+    var key = this.key.evaluate(state);
+    var obj = {};
     obj[key] = this.value.evaluate(state);
     return  obj;
   }

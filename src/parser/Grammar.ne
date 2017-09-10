@@ -21,14 +21,15 @@ import {
   Negation,
   NegationNumber,
   Numeral,
-  String,
+  QString,
   Sequence,
   Substraction,
   TruthValue,
   Null,
   Variable,
   Element,
-  QList
+  QList,
+  QSet
 } from '../ast/AST';
 
 import { tokens } from './Tokens';
@@ -52,6 +53,11 @@ stmtelse ->
   | "if" exp "then" stmtelse "else" stmt  {% ([, cond, , thenBody, , elseBody]) => (new IfThenElse(cond, thenBody, elseBody)) %}
 
 #Lists
+set ->
+   "{" elements "}"        {% ([,elem,]) => (elem) %}
+  | "{" "}"                {% ([,]) => (new QSet([])) %}#null es epsilon. Esta bien? si uso element -> null estaria permitiendo [,] deberia?
+
+
 list ->
    "[" elements "]"        {% ([,elem,]) => (elem) %}
   | "[" "]"                {% ([,]) => (new QList([])) %}#null es epsilon. Esta bien? si uso element -> null estaria permitiendo [,] deberia?
@@ -61,7 +67,7 @@ elements ->
   | element                {% ([element]) => (new QList([element])) %}
 
 element ->
-   subValue ":" exp        {% ([key, , exp]) => (new Element(key, exp)) %} #Que es mejor? a) crear dos producciones una para literales y otra para indentificadores b) hacer un subgrupo en values c) que sea value : value
+   elemValue ":" exp        {% ([key, , exp]) => (new Element(key, exp)) %} #Que es mejor? a) crear dos producciones una para literales y otra para indentificadores b) hacer un subgrupo en values c) que sea value : value
   | exp                    {% id %}
 
 # Expressions
@@ -103,13 +109,13 @@ value ->
   | "false"                 {% () => (new TruthValue(false)) %}
   | "null"                  {% () => (new Null())%}
   | list                    {% id %}
-  | literals                {% ([literal]) => (new String(literal))%}
+  | set                     {% id %}
+  | literals                {% ([literal]) => (new QString(literal))%}
   | identifier              {% ([id]) => (new Variable(id)) %}
 
-
-subValue -> #Esto tiene sentido siempre cuando no exista una subdivision con parte de esto y algo de value
-   literals                 {% ([literal]) => (new String(literal))%}
-  | identifier              {% ([id]) => (new String(id)) %}
+elemValue -> #Esto tiene sentido siempre cuando no exista una subdivision con parte de esto y algo de value
+   literals                 {% ([literal]) => (new QString(literal))%}
+  | identifier              {% ([id]) => (new QString(id)) %}
 
 # Atoms
 identifier ->
