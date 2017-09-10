@@ -4,22 +4,20 @@ import { State } from '../interpreter/State';
 /**
   Representación de sumas.
 */
-export class List implements Exp {
+export class QList implements Exp {
 
-  elementList;
+  elementList:Exp[];
 
   constructor(elementList) {
     this.elementList = elementList;
-    console.log('Type of: '+ typeof elementList);
-    console.log('Element: '+ elementList);
   }
 
   toString(): string {
-    return `List()`;
+    return `QList()`;
   }
 
   unparse(): string {
-    return `List()`;
+    return `QListo()`;
   }
 
   push(element:any):any{
@@ -28,6 +26,10 @@ export class List implements Exp {
   }
 
   evaluate(state: State) {// [a:2,"r":true]
-      return this.elementList;
+    var qresult:any[]=[];
+    for(var i=0;i<this.elementList.length;i++){
+      qresult.push(this.elementList[i].evaluate(state));
+    }
+    return qresult.reverse();
   }
 }

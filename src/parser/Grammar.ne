@@ -28,7 +28,7 @@ import {
   Null,
   Variable,
   Element,
-  List
+  QList
 } from '../ast/AST';
 
 import { tokens } from './Tokens';
@@ -54,11 +54,11 @@ stmtelse ->
 #Lists
 list ->
    "[" elements "]"        {% ([,elem,]) => (elem) %}
-  | "[" "]"                {% ([,]) => (new List([])) %}#null es epsilon. Esta bien? si uso element -> null estaria permitiendo [,] deberia?
+  | "[" "]"                {% ([,]) => (new QList([])) %}#null es epsilon. Esta bien? si uso element -> null estaria permitiendo [,] deberia?
 
 elements ->
    element "," elements    {% ([element, ,elements]) => (elements.push(element)) %}#por derecha para que no se nos chanflee la cosa (el orden)
-  | element                {% ([element]) => (new List([element])) %}
+  | element                {% ([element]) => (new QList([element])) %}
 
 element ->
    subValue ":" exp        {% ([key, , exp]) => (new Element(key, exp)) %} #Que es mejor? a) crear dos producciones una para literales y otra para indentificadores b) hacer un subgrupo en values c) que sea value : value
