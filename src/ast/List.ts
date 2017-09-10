@@ -6,11 +6,12 @@ import { State } from '../interpreter/State';
 */
 export class List implements Exp {
 
-  elementList:[any]|undefined[];
+  elementList;
 
-  constructor(elementList:[any]|undefined[]) {
+  constructor(elementList) {
     this.elementList = elementList;
-    console.log(typeof elementList);
+    console.log('Type of: '+ typeof elementList);
+    console.log('Element: '+ elementList);
   }
 
   toString(): string {
@@ -21,12 +22,12 @@ export class List implements Exp {
     return `List()`;
   }
 
-  pushList(element:any):any{
+  push(element:any):any{
     this.elementList.push(element);
     return this;
   }
 
-  evaluate(state: State):[any]|undefined[] {// [a:2,"r":true]
+  evaluate(state: State) {// [a:2,"r":true]
       return this.elementList;
   }
 }
