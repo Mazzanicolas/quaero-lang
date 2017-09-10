@@ -20,3 +20,14 @@ export interface Exp extends ASTNode {
 export interface Stmt extends ASTNode {
   evaluate(state: State): State;
 }
+
+export interface Collection extends Exp {
+  length(): number;
+  in(): boolean;
+  index(): any;
+  indexKV(): any;
+  concatenation(): any;
+  union(): any;
+  intersection(): any;
+  difference(): any;
+}
