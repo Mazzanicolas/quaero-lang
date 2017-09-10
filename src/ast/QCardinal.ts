@@ -1,13 +1,14 @@
-import { Exp, Collection } from './ASTNode';
+import { Exp } from './ASTNode';
 import { State } from '../interpreter/State';
+import { QList, QSet } from './AST';
 /**
   Representación de constantes numéricas o numerales.
 */
 export class QCardinal implements Exp {
 
-  value: Collection;
+  value: any;
 
-  constructor(value: Collection) {
+  constructor(value: any) {
     this.value = value;
   }
 
@@ -20,6 +21,7 @@ export class QCardinal implements Exp {
   }
 
   evaluate(state: State): any {
-    return this.value//.length();//implementar
+    console.log(this.value.evaluate(state)+" : "+this.value.evaluate(state).length);
+    return this.value.evaluate(state).length;
   }
 }

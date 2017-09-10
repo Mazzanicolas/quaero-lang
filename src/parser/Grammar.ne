@@ -29,7 +29,8 @@ import {
   Variable,
   Element,
   QList,
-  QSet
+  QSet,
+  QCardinal
 } from '../ast/AST';
 
 import { tokens } from './Tokens';
@@ -59,8 +60,8 @@ set ->
 
 
 list ->
-   "[" elements "]"        {% ([,elem,]) => (elem) %}
-  | "[" "]"                {% ([,]) => (new QList([])) %}#null es epsilon. Esta bien? si uso element -> null estaria permitiendo [,] deberia?
+   "[" elements "]"        {% ([ ,elem, ]) => (elem) %}
+  | "[" "]"                {% ([ , ]) => (new QList([])) %}#null es epsilon. Esta bien? si uso element -> null estaria permitiendo [,] deberia?
 
 elements ->
    element "," elements    {% ([element, ,elements]) => (elements.push(element)) %}#por derecha para que no se nos chanflee la cosa (el orden)
@@ -108,10 +109,14 @@ value ->
   | "true"                  {% () => (new TruthValue(true)) %}
   | "false"                 {% () => (new TruthValue(false)) %}
   | "null"                  {% () => (new Null())%}
-  | list                    {% id %}
-  | set                     {% id %}
+  | collection              {% id %}
   | literals                {% ([literal]) => (new QString(literal))%}
   | identifier              {% ([id]) => (new Variable(id)) %}
+  | "#" value               {% ([, coll]) => (new QCardinal(coll)) %} #Si no hace falta que este en el AST se puede crear un metodo en QList o un Collections inclusive
+
+collection ->
+   list                     {% id %}
+  | set                     {% id %}
 
 elemValue -> #Esto tiene sentido siempre cuando no exista una subdivision con parte de esto y algo de value
    literals                 {% ([literal]) => (new QString(literal))%}

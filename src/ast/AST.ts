@@ -17,6 +17,7 @@ export * from './QString';
 export * from './Substraction';
 export * from './NegationNumber';
 export * from './Variable';
+export * from './QCardinal';
 // BExp
 export * from './CompareEqual';
 export * from './CompareNotEqual';

@@ -20,7 +20,7 @@ export interface Exp extends ASTNode {
 export interface Stmt extends ASTNode {
   evaluate(state: State): State;
 }
-
+/*Deprecated
 export interface Collection extends Exp {
   length(): number;
   in(): boolean;
@@ -31,3 +31,4 @@ export interface Collection extends Exp {
   intersection(): any;
   difference(): any;
 }
+*/
