@@ -22,7 +22,7 @@ export interface Stmt extends ASTNode {
 }
 /*Deprecated
 export interface Collection extends Exp {
-  length(): number;
+  length(): number; //Done
   in(): boolean;
   index(): any;
   indexKV(): any;

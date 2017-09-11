@@ -30,7 +30,8 @@ import {
   Element,
   QList,
   QSet,
-  QCardinal
+  QCardinal,
+  QIn
 } from '../ast/AST';
 
 import { tokens } from './Tokens';
@@ -111,12 +112,13 @@ value ->
   | "null"                  {% () => (new Null())%}
   | collection              {% id %}
   | literals                {% ([literal]) => (new QString(literal))%}
-  | identifier              {% ([id]) => (new Variable(id)) %}
   | "#" value               {% ([, coll]) => (new QCardinal(coll)) %} #Si no hace falta que este en el AST se puede crear un metodo en QList o un Collections inclusive
+  | value "<-" collection   {% ([val, , coll]) => (new QIn(val,coll)) %} #Cambiar de lugar
 
 collection ->
    list                     {% id %}
   | set                     {% id %}
+  | identifier              {% ([id]) => (new Variable(id)) %}#Definitivamente no va aca
 
 elemValue -> #Esto tiene sentido siempre cuando no exista una subdivision con parte de esto y algo de value
    literals                 {% ([literal]) => (new QString(literal))%}

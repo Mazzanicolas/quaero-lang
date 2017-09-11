@@ -21,7 +21,6 @@ export class QCardinal implements Exp {
   }
 
   evaluate(state: State): any {
-    console.log(this.value.evaluate(state)+" : "+this.value.evaluate(state).length);
     return this.value.evaluate(state).length;
   }
 }

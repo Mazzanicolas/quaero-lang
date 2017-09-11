@@ -30,6 +30,7 @@ export * from './Disjunction';
 export * from './Negation';
 export * from './TruthValue';
 export * from './Null';
+export * from './QIn';
 
 export * from './QList';
 export * from './QSet';
