@@ -2,6 +2,7 @@
 
   // Punctuation
   '&&':         '&&',
+  '..':         '..',
   '||':         '||',
   '(':          '(',
   ')':          ')',
@@ -39,6 +40,8 @@
   'true':       'true',
   'false':      'false',
   'null':       'null',
+  'function':   'function',
+  'return':     'return',
   // Atoms
   infinity:     { match:/Infinity/,value: (x: string) => (Infinity) },
   nan:          { match:/NaN/,value: (x: string) => (NaN) },

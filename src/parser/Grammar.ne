@@ -35,7 +35,10 @@ import {
   QConcatenation,
   QIntersection,
   QUnion,
-  QDifference
+  QDifference,
+  QFunction,
+  QFCall,
+  QListComplete
 } from '../ast/AST';
 
 import { tokens } from './Tokens';
@@ -57,6 +60,11 @@ stmtelse ->
     identifier "=" exp ";"                {% ([id, , exp, ]) => (new Assignment(id, exp)) %}
   | "{" stmt:* "}"                        {% ([, statements, ]) => (new Sequence(statements)) %}
   | "if" exp "then" stmtelse "else" stmt  {% ([, cond, , thenBody, , elseBody]) => (new IfThenElse(cond, thenBody, elseBody)) %}
+  | "function" identifier "(" functionValue ")" "{" stmt:* "}" {% ([,id, , val , , ,stmt, ]) => (new QFunction(id,val,stmt)) %}
+
+functionValue ->
+  value:* {% id %} #Agregar las comas
+
 
 #Collections
 set ->
@@ -69,12 +77,13 @@ list ->
   | "[" "]"                {% ([ , ]) => (new QList([])) %}#null es epsilon. Esta bien? si uso element -> null estaria permitiendo [,] deberia?
 
 elements ->
-   element "," elements    {% ([element, ,elements]) => (elements.push(element)) %}#por derecha para que no se nos chanflee la cosa (el orden)
-  | element                {% ([element]) => (new QList([element])) %}
+    element "," elements    {% ([element, ,elements]) => (elements.push(element)) %}#por derecha para que no se nos chanflee la cosa (el orden)
+  | elements:+ ".." element {% ([elem, ,elem2]) => (new QListComplete(elem,elem2)) %}
+  | element                 {% ([element]) => (new QList([element])) %}
 
 element ->
    elemValue ":" exp        {% ([key, , exp]) => (new Element(key, exp)) %} #Que es mejor? a) crear dos producciones una para literales y otra para indentificadores b) hacer un subgrupo en values c) que sea value : value
-  | exp                    {% id %}
+  | exp                     {% id %}
 
 # Expressions
 
@@ -82,6 +91,7 @@ exp ->
     exp "&&" comp           {% ([lhs, , rhs]) => (new Conjunction(lhs, rhs)) %}
   | exp "||" comp           {% ([lhs, , rhs]) => (new Disjunction(lhs, rhs)) %}
   | collection "[" value "]"{% ([coll, ,val, ]) => (new QIndex(coll,val)) %} #Ordenar
+  | identifier "(" functionValue ")" {% ([id,,fnV,]) => (new QFCall(id,fnV)) %}
   | comp                    {% id %}
 
 comp ->

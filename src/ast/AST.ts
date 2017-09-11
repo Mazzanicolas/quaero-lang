@@ -38,3 +38,6 @@ export * from './QIn';
 
 export * from './QList';
 export * from './QSet';
+export * from './QListComplete';
+export * from './QFunction';
+export * from './QFCall';

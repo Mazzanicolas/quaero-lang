@@ -22,4 +22,8 @@ export class Variable implements Exp {
   evaluate(state: State): any {
     return state.get(this.id);
   }
+
+  getid(){
+    return this.id;
+  }
 }
