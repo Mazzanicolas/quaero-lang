@@ -15,7 +15,6 @@ import {
   Disjunction,
   IfThenElse,
   IfThen,
-  Index,
   Multiplication,
   Division,
   Negation,
@@ -31,7 +30,8 @@ import {
   QList,
   QSet,
   QCardinal,
-  QIn
+  QIn,
+  QIndex
 } from '../ast/AST';
 
 import { tokens } from './Tokens';
@@ -77,7 +77,7 @@ element ->
 exp ->
     exp "&&" comp           {% ([lhs, , rhs]) => (new Conjunction(lhs, rhs)) %}
   | exp "||" comp           {% ([lhs, , rhs]) => (new Disjunction(lhs, rhs)) %}
-  | exp "[" exp "]"         {% ([ex, ,index,]) => (new Index(ex,index)) %}
+  | collection "[" value "]"{% ([coll, ,val, ]) => (new QIndex(coll,val)) %}
   | comp                    {% id %}
 
 comp ->
