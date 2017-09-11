@@ -10,6 +10,7 @@ export * from './Element';
 // AExp
 export * from './Addition';
 export * from './Multiplication';
+export * from './QConcatenation';
 export * from './Division';
 export * from './Numeral';
 export * from './QString';

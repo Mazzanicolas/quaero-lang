@@ -31,7 +31,8 @@ import {
   QSet,
   QCardinal,
   QIn,
-  QIndex
+  QIndex,
+  QConcatenation
 } from '../ast/AST';
 
 import { tokens } from './Tokens';
@@ -54,7 +55,7 @@ stmtelse ->
   | "{" stmt:* "}"                        {% ([, statements, ]) => (new Sequence(statements)) %}
   | "if" exp "then" stmtelse "else" stmt  {% ([, cond, , thenBody, , elseBody]) => (new IfThenElse(cond, thenBody, elseBody)) %}
 
-#Lists
+#Collections
 set ->
    "{" elements "}"        {% ([,elem,]) => (elem) %}
   | "{" "}"                {% ([,]) => (new QSet([])) %}#null es epsilon. Esta bien? si uso element -> null estaria permitiendo [,] deberia?
@@ -77,7 +78,7 @@ element ->
 exp ->
     exp "&&" comp           {% ([lhs, , rhs]) => (new Conjunction(lhs, rhs)) %}
   | exp "||" comp           {% ([lhs, , rhs]) => (new Disjunction(lhs, rhs)) %}
-  | collection "[" value "]"{% ([coll, ,val, ]) => (new QIndex(coll,val)) %}
+  | collection "[" value "]"{% ([coll, ,val, ]) => (new QIndex(coll,val)) %} #Ordenar
   | comp                    {% id %}
 
 comp ->
@@ -92,6 +93,7 @@ comp ->
 addsub ->
     addsub "+" muldiv       {% ([lhs, , rhs]) => (new Addition(lhs, rhs)) %}
   | addsub "-" muldiv       {% ([lhs, , rhs]) => (new Substraction(lhs, rhs)) %}
+  | addsub "++" muldiv     {% ([lhs, , rhs]) => (new QConcatenation(lhs,rhs)) %}
   | muldiv                  {% id %}
 
 muldiv ->
@@ -110,7 +112,7 @@ value ->
   | "true"                  {% () => (new TruthValue(true)) %}
   | "false"                 {% () => (new TruthValue(false)) %}
   | "null"                  {% () => (new Null())%}
-  | collection              {% id %}
+  | collection              {% id %}#¿Vale la pena que exista?
   | literals                {% ([literal]) => (new QString(literal))%}
   | "#" value               {% ([, coll]) => (new QCardinal(coll)) %} #Si no hace falta que este en el AST se puede crear un metodo en QList o un Collections inclusive
   | value "<-" collection   {% ([val, , coll]) => (new QIn(val,coll)) %} #Cambiar de lugar

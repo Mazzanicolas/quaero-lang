@@ -23,7 +23,7 @@ export class QIn implements Exp {
   }
 
   evaluate(state: State): any {
-    var coll = this.collection.evaluate(state);
+    var coll = this.collection.evaluate(state); //ver includes
     var val = this.value.evaluate(state);
     for(var i=0;i<coll.length;i++){
       if(coll[i]==val){
