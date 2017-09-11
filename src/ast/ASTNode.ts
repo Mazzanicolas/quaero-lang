@@ -26,9 +26,9 @@ export interface Collection extends Exp {
   in(): boolean; //Done
   index(): any; //
   indexKV(): any;
-  concatenation(): any;
-  union(): any;
-  intersection(): any;
+  concatenation(): any; //Done
+  union(): any; //Done
+  intersection(): any; //Done
   difference(): any;
 }
 */

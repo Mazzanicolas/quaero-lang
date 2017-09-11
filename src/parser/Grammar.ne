@@ -32,7 +32,10 @@ import {
   QCardinal,
   QIn,
   QIndex,
-  QConcatenation
+  QConcatenation,
+  QIntersection,
+  QUnion,
+  QDifference
 } from '../ast/AST';
 
 import { tokens } from './Tokens';
@@ -93,12 +96,15 @@ comp ->
 addsub ->
     addsub "+" muldiv       {% ([lhs, , rhs]) => (new Addition(lhs, rhs)) %}
   | addsub "-" muldiv       {% ([lhs, , rhs]) => (new Substraction(lhs, rhs)) %}
-  | addsub "++" muldiv     {% ([lhs, , rhs]) => (new QConcatenation(lhs,rhs)) %}
+  | addsub "++" muldiv      {% ([lhs, , rhs]) => (new QConcatenation(lhs,rhs)) %}
+  | addsub "--" muldiv      {% ([lhs, , rhs]) => (new QDifference(lhs,rhs)) %}
   | muldiv                  {% id %}
 
 muldiv ->
     muldiv "*" neg          {% ([lhs, , rhs]) => (new Multiplication(lhs, rhs)) %}
   | muldiv "/" neg          {% ([lhs, , rhs]) => (new Division(lhs, rhs)) %}
+  | muldiv "/\\" neg        {% ([lhs, ,rhs]) => (new QIntersection(lhs,rhs)) %}
+  | muldiv "\\/" neg        {% ([lhs, ,rhs]) => (new QUnion(lhs,rhs)) %}
   | "-" muldiv              {% ([, rhs]) => (new NegationNumber(rhs)) %}
   | neg                     {% id %}
 
