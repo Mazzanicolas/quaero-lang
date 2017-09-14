@@ -1,15 +1,14 @@
 import { Exp } from './ASTNode';
 import { State } from '../interpreter/State';
-import { QList, QSet } from './AST';
 /**
   Representación de constantes numéricas o numerales.
 */
 export class QIn implements Exp {
 
   value: any;
-  collection: QList|QSet;
+  collection:any;
 
-  constructor(value: any,collection: QList|QSet) {
+  constructor(value: any,collection:any) {
     this.value = value;
     this.collection = collection;
   }

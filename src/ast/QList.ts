@@ -25,7 +25,7 @@ export class QList implements Exp {
     return this;
   }
 
-  evaluate(state: State) {// [a:2,"r":true]
+  evaluate(state: State) {
     var qresult:any[]=[];
     for(var i=0;i<this.elementList.length;i++){
       qresult.push(this.elementList[i].evaluate(state));

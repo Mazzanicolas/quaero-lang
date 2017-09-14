@@ -4,7 +4,7 @@ import { QString } from  './AST';
 /**
   Representación de las sentencias condicionales.
 */
-export class Element implements Stmt  {
+export class QKeyValue implements Stmt  {
   key: QString;
   value: Exp;
 

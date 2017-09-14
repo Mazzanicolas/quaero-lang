@@ -19,7 +19,7 @@ while (true) {
   const lexer = new MyLexer(tokens);
   const parser = new Parser(ParserRules, ParserStart, { lexer });
 
-  const input = readlineSync.question('>>> ');
+  const input = readlineSync.question('> ');
 
   try {
     // Parse user input

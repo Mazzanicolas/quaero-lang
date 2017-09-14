@@ -4,13 +4,13 @@ import { State } from '../interpreter/State';
 /**
   Representación de constantes numéricas o numerales.
 */
-export class Null implements Exp {
+export class QNull implements Exp {
 
   constructor() {
   }
 
   toString(): string {
-    return `Null(${null})`;
+    return `QNull(${null})`;
   }
 
   unparse(): string {

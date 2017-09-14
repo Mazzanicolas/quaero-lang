@@ -13,7 +13,7 @@ export class QString implements Exp {
   }
 
   toString(): string {
-    return `QString(${this.value})`;
+    return `String(${this.value})`;
   }
 
   unparse(): string {

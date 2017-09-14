@@ -4,7 +4,7 @@ import { State } from '../interpreter/State';
 /**
   Representación de multiplicaciones.
 */
-export class NegationNumber implements Exp {
+export class QNNegation implements Exp {
 
   rhs: Exp;
 

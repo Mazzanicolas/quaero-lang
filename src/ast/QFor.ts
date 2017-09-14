@@ -3,15 +3,9 @@ import { State } from '../interpreter/State';
 /**
   Representación de sumas.
 */
-export class QFunction implements Exp {
-  id:string;
-  val:any[];
-  stmt: [Stmt];
+export class QFor implements Exp {
 
   constructor(id,val,stmt) {
-    this.id = id;
-    this.val = val;
-    this.stmt = stmt;
   }
 
   toString(): string {
@@ -23,7 +17,6 @@ export class QFunction implements Exp {
   }
 
   evaluate(state: State) {
-    state.set(this.id,[this.val,this.stmt]);
-    return state;
+    return undefined;
   }
 }

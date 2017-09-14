@@ -5,14 +5,14 @@ import { State } from '../interpreter/State';
 */
 export class QFCall implements Exp {
   id:string;
-  leo:any[]; //Esteregg
+  val:any[];
   stmt: [Stmt];
-  fnctVars: Map<string, any>;
+  temporalState: Map<string, any>;
 
   constructor(id,val) {
     this.id = id;
-    this.leo = val;
-    this.fnctVars = new Map<string, any>();
+    this.val = val.reverse();
+    console.log(id,"---",val);
   }
 
   toString(): string {
@@ -24,12 +24,15 @@ export class QFCall implements Exp {
   }
 
   evaluate(state: State) {
-    let funct = state.get(this.id);
-    let values = funct[0], statements = funct[1];
-    for(let j=0;j<this.leo.length;j++){
-      this.fnctVars.set(values[j].getid(),this.leo[j].evaluate(state));
-      console.log(`{ ${Array.from(this.fnctVars.entries()).map(([key, value]) => (`${key} = ${value}`)).join("; ")} }`);
-    } /*for(let i=0; i<this.stmt.length;i++){
+    //for (var i in state){this.temporalState[i] = state[i];}
+
+    //let funct = state.get(this.id);
+    //let values = funct[0], statements = funct[1];
+    //console.log(funct,values);
+    //for(let j=0;j<this.val.length;j++){
+    //  this.fnctVars.set(values[j].getid(),this.val[j].evaluate(state));
+    //  console.log(`{ ${Array.from(this.fnctVars.entries()).map(([key, value]) => (`${key} = ${value}`)).join("; ")} }`);
+     /*for(let i=0; i<this.stmt.length;i++){
       state=this.stmt[i].evaluate(this.fnctVars);
     }*/
     return state;

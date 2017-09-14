@@ -15,30 +15,34 @@ import {
   Disjunction,
   IfThenElse,
   IfThen,
+  Index,
   Multiplication,
   Division,
   Negation,
-  NegationNumber,
   Numeral,
   QString,
   Sequence,
   Substraction,
   TruthValue,
-  Null,
   Variable,
-  Element,
+  QNull,
+  QKeyValue,
   QList,
   QSet,
+  QNNegation,
   QCardinal,
   QIn,
   QIndex,
-  QConcatenation,
   QIntersection,
+  QConcatenation,
   QUnion,
   QDifference,
+  QGetKey,
   QFunction,
   QFCall,
-  QListComplete
+  QConditionalExp,
+  QFor,
+  QEnumeration
 } from '../ast/AST';
 
 import { tokens } from './Tokens';
@@ -54,44 +58,28 @@ const lexer = new MyLexer(tokens);
 
 stmt ->
     stmtelse                              {% id %}
-  | "if" exp "then" stmt                  {% ([, cond, , thenBody]) => (new IfThen(cond, thenBody)) %}
+  | "if" "(" exp ")" stmt                  {% ([, , cond, , thenBody]) => (new IfThen(cond, thenBody)) %}
 
 stmtelse ->
     identifier "=" exp ";"                {% ([id, , exp, ]) => (new Assignment(id, exp)) %}
   | "{" stmt:* "}"                        {% ([, statements, ]) => (new Sequence(statements)) %}
-  | "if" exp "then" stmtelse "else" stmt  {% ([, cond, , thenBody, , elseBody]) => (new IfThenElse(cond, thenBody, elseBody)) %}
+  | "if" "(" exp ")" stmtelse "else" stmt  {% ([, ,cond, , thenBody, , elseBody]) => (new IfThenElse(cond, thenBody, elseBody)) %}
   | "function" identifier "(" functionValue ")" "{" stmt:* "}" {% ([,id, , val , , ,stmt, ]) => (new QFunction(id,val,stmt)) %}
+  | "for" "(" functionCallValue ")" stmt:* {%%}#No implementado
 
-functionValue ->
-  value:* {% id %} #Agregar las comas
+functionValue->
+  identifier                              {% ([id]) => ([id]) %}
+  | identifier "," functionValue          {% ([id, , fValue]) => {fValue.push(id);return fValue}%}
 
-
-#Collections
-set ->
-   "{" elements "}"        {% ([,elem,]) => (elem) %}
-  | "{" "}"                {% ([,]) => (new QSet([])) %}#null es epsilon. Esta bien? si uso element -> null estaria permitiendo [,] deberia?
-
-
-list ->
-   "[" elements "]"        {% ([ ,elem, ]) => (elem) %}
-  | "[" "]"                {% ([ , ]) => (new QList([])) %}#null es epsilon. Esta bien? si uso element -> null estaria permitiendo [,] deberia?
-
-elements ->
-    element "," elements    {% ([element, ,elements]) => (elements.push(element)) %}#por derecha para que no se nos chanflee la cosa (el orden)
-  | elements:+ ".." element {% ([elem, ,elem2]) => (new QListComplete(elem,elem2)) %}
-  | element                 {% ([element]) => (new QList([element])) %}
-
-element ->
-   elemValue ":" exp        {% ([key, , exp]) => (new Element(key, exp)) %} #Que es mejor? a) crear dos producciones una para literales y otra para indentificadores b) hacer un subgrupo en values c) que sea value : value
-  | exp                     {% id %}
+functionCallValue->
+    exp                                  {% ([ex]) => ([ex]) %}
+    | exp "," functionCallValue          {% ([ex, , fCValue]) => {fCValue.push(ex);return fCValue}%}
 
 # Expressions
 
 exp ->
     exp "&&" comp           {% ([lhs, , rhs]) => (new Conjunction(lhs, rhs)) %}
   | exp "||" comp           {% ([lhs, , rhs]) => (new Disjunction(lhs, rhs)) %}
-  | collection "[" value "]"{% ([coll, ,val, ]) => (new QIndex(coll,val)) %} #Ordenar
-  | identifier "(" functionValue ")" {% ([id,,fnV,]) => (new QFCall(id,fnV)) %}
   | comp                    {% id %}
 
 comp ->
@@ -115,11 +103,11 @@ muldiv ->
   | muldiv "/" neg          {% ([lhs, , rhs]) => (new Division(lhs, rhs)) %}
   | muldiv "/\\" neg        {% ([lhs, ,rhs]) => (new QIntersection(lhs,rhs)) %}
   | muldiv "\\/" neg        {% ([lhs, ,rhs]) => (new QUnion(lhs,rhs)) %}
-  | "-" muldiv              {% ([, rhs]) => (new NegationNumber(rhs)) %}
   | neg                     {% id %}
 
 neg ->
     "!" value               {% ([, exp]) => (new Negation(exp)) %}
+  | "-" value               {% ([, val]) => (new QNNegation(val)) %}
   | value                   {% id %}
 
 value ->
@@ -127,22 +115,47 @@ value ->
   | number                  {% ([num]) => (new Numeral(num)) %}
   | "true"                  {% () => (new TruthValue(true)) %}
   | "false"                 {% () => (new TruthValue(false)) %}
-  | "null"                  {% () => (new Null())%}
-  | collection              {% id %}#¿Vale la pena que exista?
   | literals                {% ([literal]) => (new QString(literal))%}
-  | "#" value               {% ([, coll]) => (new QCardinal(coll)) %} #Si no hace falta que este en el AST se puede crear un metodo en QList o un Collections inclusive
-  | value "<-" collection   {% ([val, , coll]) => (new QIn(val,coll)) %} #Cambiar de lugar
+  | identifier "(" functionCallValue ")" {%([id, , fcv, ]) => (new QFCall(id,fcv))%}#No implementado
+  | identifier              {% ([id]) => (new Variable(id)) %}
+  | nullvalue               {% ([id]) => (new QNull())%}
+  | "#" value               {% ([, val]) => (new QCardinal(val)) %}
+  #Eliminar ambiguedad v v v si es que tiene
+  | collection "." value    {% ([list, , key]) => (new QGetKey(list,key)) %}#No Implementado
+  | value "[" value "]"     {% ([value, ,index, ]) => (new QIndex(value,index)) %}
+  | value "<-" value        {% ([val, , list]) => (new QIn(val,list))%}#Eliminar ambiguedad v v v
+  | "(" exp "if" exp "else" exp ")" {% ([, iftrue, , cond , , iffalse, ]) => (new QConditionalExp(cond, iftrue, iffalse)) %}
+  #Eliminar ambiguedad ^ ^ ^ si es que tiene
+  | collection              {% id %}
+
+# Collections
+
+key ->
+  literals                {% ([literal]) => (new QString(literal))%}
+| identifier              {% ([id]) => (new QString(id)) %}
+
+list->
+   "[" "]"                  {% ([id]) => (new QList([])) %}
+  | "[" elements "]"         {% ([,elem, ]) => (elem) %}
+
+set ->
+   "{" "}"                  {% ([, values, ]) => (new QSet(values)) %}
+  | "{" elements "}"         {% ([,elem, ]) => (elem) %}
+
+elements ->
+      collectionValue "," elements {% ([element, ,elements]) => (elements.push(element)) %}
+    | collectionValue       {% ([element]) => (new QList([element])) %}
 
 collection ->
    list                     {% id %}
   | set                     {% id %}
-  | identifier              {% ([id]) => (new Variable(id)) %}#Definitivamente no va aca
 
-elemValue -> #Esto tiene sentido siempre cuando no exista una subdivision con parte de esto y algo de value
-   literals                 {% ([literal]) => (new QString(literal))%}
-  | identifier              {% ([id]) => (new QString(id)) %}
+collectionValue->
+   value                   {% id %}
+  | key ":" exp            {% ([key, ,value]) => (new QKeyValue(key,value))%}
 
 # Atoms
+
 identifier ->
     %identifier             {% ([id]) => (id.value) %}
 
@@ -150,8 +163,11 @@ number ->
     %integer                {% ([id]) => (id.value) %}
   | %hex                    {% ([id]) => (id.value) %}
   | %float                  {% ([id]) => (id.value) %}
-  | %infinity               {% ([id]) => (id.value) %}
-  | %nan                    {% ([id]) => (id.value) %}
+  | "Infinity"              {% ([id]) => (Number.POSITIVE_INFINITY) %}
+  | "NaN"                   {% ([id]) => (NaN) %}
 
 literals ->
   %literal                  {% ([id]) => (id.value) %}
+
+nullvalue ->
+  "null"                    {% id %}

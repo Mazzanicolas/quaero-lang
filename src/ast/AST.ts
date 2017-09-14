@@ -6,22 +6,18 @@ export * from './Assignment';
 export * from './IfThenElse';
 export * from './IfThen';
 export * from './Sequence';
-export * from './Element';
+
 // AExp
 export * from './Addition';
 export * from './Multiplication';
-export * from './QConcatenation';
-export * from './QIntersection';
-export * from './QDifference';
-export * from './QUnion';
 export * from './Division';
+export * from './Index';
 export * from './Numeral';
+export * from './QNNegation';
 export * from './QString';
 export * from './Substraction';
-export * from './NegationNumber';
 export * from './Variable';
-export * from './QCardinal';
-export * from './QIndex';
+
 // BExp
 export * from './CompareEqual';
 export * from './CompareNotEqual';
@@ -33,11 +29,22 @@ export * from './Conjunction';
 export * from './Disjunction';
 export * from './Negation';
 export * from './TruthValue';
-export * from './Null';
-export * from './QIn';
 
+//
+export * from './QNull';
+export * from './QKeyValue';
 export * from './QList';
 export * from './QSet';
-export * from './QListComplete';
+export * from './QCardinal';
+export * from './QIn';
+export * from './QIndex';
+export * from './QIntersection';
+export * from './QConcatenation';
+export * from './QUnion';
+export * from './QDifference';
+export * from './QGetKey';
 export * from './QFunction';
 export * from './QFCall';
+export * from './QConditionalExp';
+export * from './QFor';
+export * from './QEnumeration';

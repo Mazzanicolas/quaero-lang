@@ -1,18 +1,21 @@
 import { Exp } from './ASTNode';
 import { State } from '../interpreter/State';
+
 /**
   Representación de constantes numéricas o numerales.
 */
-export class QCardinal implements Exp {
+export class Index implements Exp {
 
-  value: any;
+  value: Exp;
+  index: Exp;
 
-  constructor(value: any) {
+  constructor(value:Exp,index:Exp) {
     this.value = value;
+    this.index = index;
   }
 
   toString(): string {
-    return `QCardinal(${this.value})`;
+    return `Index(${this.value})`;
   }
 
   unparse(): string {
@@ -20,6 +23,6 @@ export class QCardinal implements Exp {
   }
 
   evaluate(state: State): any {
-    return this.value.evaluate(state).length;
+    return this.value.evaluate(state)[this.index.evaluate(state)];
   }
 }
