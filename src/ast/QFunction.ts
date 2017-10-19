@@ -7,7 +7,7 @@ export class QFunction implements Exp {
   id:string;
   val:any[];
   stmt: [Stmt];
-  ret:string;
+  ret:any;
 
   constructor(id,val,stmt,ret) {
     this.id = id;

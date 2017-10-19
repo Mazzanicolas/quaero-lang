@@ -11,7 +11,6 @@ export class QFCall implements Exp {
   id:string;
   val:any[];
   stmt: [Stmt];
-  ret:string;
   temporalState: State;
 
   constructor(id,val) {
