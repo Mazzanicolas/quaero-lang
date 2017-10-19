@@ -18,7 +18,7 @@ export class QKeyValue implements Stmt  {
   }
 
   unparse(): string {
-    return `${this.key} : { ${this.value.unparse()} }`;
+    return `${this.key.toString()} : { ${this.value.unparse()} }`;
   }
 
   evaluate(state: State): any {

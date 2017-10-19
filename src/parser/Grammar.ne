@@ -63,7 +63,7 @@ stmt ->
 stmtelse ->
     identifier "=" exp ";"                {% ([id, , exp, ]) => (new Assignment(id, exp)) %}
   | "{" stmt:* "}"                        {% ([, statements, ]) => (new Sequence(statements)) %}
-  | "if" "(" exp ")" stmtelse "else" stmt  {% ([, ,cond, , thenBody, , elseBody]) => (new IfThenElse(cond, thenBody, elseBody)) %}
+  | "if" "(" exp ")" stmtelse "else" stmt {% ([, ,cond, , thenBody, , elseBody]) => (new IfThenElse(cond, thenBody, elseBody)) %}
   | "function" identifier "(" functionValue ")" "{" stmt:* "return" exp ";" "}" {% ([,id, , val , , ,stmt, , ret, ,]) => (new QFunction(id,val,stmt,ret)) %}
   | "for" "(" functionCallValue ")" stmt:* {%%}#No implementado
 
