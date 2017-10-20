@@ -65,7 +65,9 @@ stmtelse ->
   | "{" stmt:* "}"                        {% ([, statements, ]) => (new Sequence(statements)) %}
   | "if" "(" exp ")" stmtelse "else" stmt {% ([, ,cond, , thenBody, , elseBody]) => (new IfThenElse(cond, thenBody, elseBody)) %}
   | "function" identifier "(" functionValue ")" "{" stmt:* "return" exp ";" "}" {% ([,id, , val , , ,stmt, , ret, ,]) => (new QFunction(id,val,stmt,ret)) %}
-  | "for" "(" functionCallValue ")" stmt:* {%%}#No implementado
+  | "for" "(" identifier "<-" identifier ")" stmt {% ([, ,lcond, , rcond, , stmt]) => (new QFor(lcond, rcond, stmt)) %}
+
+  #| "for" "(" functionCallValue ")" stmt:* {% ([, ,cond, , thenBody, , elseBody]) => (new IfThenElse(cond, thenBody, elseBody)) %}
 
 functionValue->
   identifier                              {% ([id]) => ([id]) %}
@@ -74,6 +76,8 @@ functionValue->
 functionCallValue->
     exp                                  {% ([ex]) => ([ex]) %}
     | exp "," functionCallValue          {% ([ex, , fCValue]) => {fCValue.push(ex);return fCValue}%}
+    | identifier "<-" identifier         {% ([ex, , fCValue]) => {fCValue.push(ex);return fCValue}%}
+
 
 # Expressions
 

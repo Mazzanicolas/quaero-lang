@@ -23,6 +23,10 @@ export class Assignment implements Stmt {
   }
 
   evaluate(state: State): State {
+    console.log(state);
+    console.log(this.id);
+    console.log(this.exp);
+    
     state.set(this.id,this.exp.evaluate(state));
     return state;
   }
