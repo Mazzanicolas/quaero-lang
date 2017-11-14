@@ -1,17 +1,24 @@
 import { Exp } from './ASTNode';
 import { State } from '../interpreter/State';
+import { Numeral } from './Numeral';
 
 /**
   Representación de sumas.
 */
 export class QEnumeration implements Exp {
 
-  eleA:Exp[];
-  eleB:Exp;
+  eleA:Numeral;
+  eleB:Numeral;
+  eleC:Numeral;
 
-  constructor(elementListA,elementListB) {
+  constructor(elementListA,elementListB,elementListC) {
+    console.log("¿¿¿¿¿?????");
+    console.log(elementListA);
+    console.log(elementListB);
+    console.log(elementListC);
     this.eleA = elementListA;
     this.eleB = elementListB;
+    this.eleC = elementListC;
   }
 
   toString(): string {
@@ -23,6 +30,17 @@ export class QEnumeration implements Exp {
   }
 
   evaluate(state: State) {//Agregar listas decrecientes
-    return undefined;
+    var inicio =  this.eleA.value;
+    var fin = this.eleC.value;
+
+    var incr = (this.eleB != null) ? this.eleB.value : 1;
+
+    var qresult:any[]=[];
+    for(var i=inicio;i<=fin; i = i + incr){
+      qresult.push(i);
+    }
+    return qresult;
   }
+
+
 }

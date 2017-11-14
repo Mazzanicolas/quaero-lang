@@ -131,6 +131,7 @@ value ->
   | "(" exp "if" exp "else" exp ")" {% ([, iftrue, , cond , , iffalse, ]) => (new QConditionalExp(cond, iftrue, iffalse)) %}
   #Eliminar ambiguedad ^ ^ ^ si es que tiene
   | collection              {% id %}
+  | range {% id %}
 
 # Collections
 
@@ -140,15 +141,19 @@ key ->
 
 list->
    "[" "]"                  {% ([id]) => (new QList([])) %}
-  | "[" elements "]"         {% ([,elem, ]) => (elem) %}
+  | "[" elements "]"        {% ([,elem, ]) => (elem) %}
 
 set ->
-   "{" "}"                  {% ([, values, ]) => (new QSet(values)) %}
+   "{" "}"                   {% ([, values, ]) => (new QSet(values)) %}
   | "{" elements "}"         {% ([,elem, ]) => (elem) %}
 
 elements ->
       collectionValue "," elements {% ([element, ,elements]) => (elements.push(element)) %}
     | collectionValue       {% ([element]) => (new QList([element])) %}
+
+range ->
+      "[" value ".." value "]"   {% ([, elemA, , elemC, ]) => (new QEnumeration(elemA, null, elemC)) %}
+    | "[" value "," value ".." value "]"   {% ([, elemA, , elemB, , elemC, ]) => (new QEnumeration(elemA, elemB, elemC)) %}
 
 collection ->
    list                     {% id %}
