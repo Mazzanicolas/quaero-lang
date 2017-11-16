@@ -6,7 +6,7 @@ export class State {
     this.vars = new Map<string, any>();
   }
 
-  toString(): string {  
+  toString(): string {
     return `{ ${Array.from(this.vars.entries()).map(([key, value]) => (`${key} = ${value}`)).join("; ")} }`;
   }
 
@@ -16,5 +16,12 @@ export class State {
 
   set(id: string, value: any) {
     this.vars.set(id, value);
+  }
+
+  clone(newState:State): any {
+    this.vars.forEach((value: string, key: string) => {
+      newState.set(key, value);
+    });
+    return newState;
   }
 }

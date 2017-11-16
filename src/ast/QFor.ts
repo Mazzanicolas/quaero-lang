@@ -25,7 +25,7 @@ export class QFor implements Exp {
   }
 
   unparse(): string {
-    return `QFunction`;
+    return `QFor`;
   }
 
   evaluate(state: State) {
@@ -33,6 +33,7 @@ export class QFor implements Exp {
     if (typeof that.rcond == 'string') {
       var forList:any[] = state.get(that.rcond);
       that.temporalState  = new State();
+      state.clone(that.temporalState);
       forList.forEach(function(value:Numeral){
           that.temporalState.set(that.lcond, value);
           that.temporalState = that.forStmt.evaluate(that.temporalState);
@@ -46,6 +47,5 @@ export class QFor implements Exp {
     });
 
     return state;
-
   }
 }
