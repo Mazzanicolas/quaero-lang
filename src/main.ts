@@ -14,8 +14,19 @@ import { State } from './interpreter/State';
 console.log("While :: REPL");
 
 var state = new State();
+var TESTING = true; // < Cambiar al estado de testing
 
-while (true) {
+export function testThis(input){
+  const lexer = new MyLexer(tokens);
+  const parser = new Parser(ParserRules, ParserStart, { lexer });
+  parser.feed(input);
+  const nodes: Stmt[] = parser.results;
+  const node = nodes[0];
+  state = node.evaluate(state);
+  return state.toString();
+}
+
+while (!TESTING) {
   const lexer = new MyLexer(tokens);
   const parser = new Parser(ParserRules, ParserStart, { lexer });
 
