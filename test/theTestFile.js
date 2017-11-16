@@ -75,3 +75,63 @@ describe('Basic Operations', function(){
     assert.equal("{ foo = -2.1 }",main.testThis("{foo=2.1; foo=-foo;}"));
   });
 });
+
+describe('Basic Comparations', function(){
+  it('Equals Boolean:  foo=true==true; >> { foo = true }',function(){
+    assert.equal("{ foo = true }",main.testThis("foo=true==true;"));
+  });
+  it('Equals Integer:  foo=1==1;       >> { foo = true }',function(){
+    assert.equal("{ foo = true }",main.testThis("foo=1==1;"));
+  });
+  it('Equals String:   foo="a"=="a";   >> { foo = true }',function(){
+    assert.equal("{ foo = true }",main.testThis('foo="a"=="a";'));
+  });
+  it('Different T:     foo=2/=1;       >> { foo = true }',function(){
+    assert.equal("{ foo = true }",main.testThis('foo=2/=1;'));
+  });
+  it('Different F:     foo=2/=2;       >> { foo = false }',function(){
+    assert.equal("{ foo = false }",main.testThis('foo=2/=2;'));
+  });
+  it('Greater True:    foo=2>1;        >> { foo = true }',function(){
+    assert.equal("{ foo = true }",main.testThis('foo=2>1;'));
+  });
+  it('Greater False:   foo=1>2;        >> { foo = false }',function(){
+    assert.equal("{ foo = false }",main.testThis('foo=1>2;'));
+  });
+  it('Greater Equal T: foo=2>=2;       >> { foo = true }',function(){
+    assert.equal("{ foo = true }",main.testThis('foo=2>=2;'));
+  });
+  it('Greater Equal F: foo=1>=2;       >> { foo = false }',function(){
+    assert.equal("{ foo = false }",main.testThis('foo=1>=2;'));
+  });
+  it('Less True:       foo=1<2;        >> { foo = true }',function(){
+    assert.equal("{ foo = true }",main.testThis('foo=1<2;'));
+  });
+  it('Less False:      foo=2<1;        >> { foo = false }',function(){
+    assert.equal("{ foo = false }",main.testThis('foo=2<1;'));
+  });
+  it('Less Equal T:    foo=2<=2;       >> { foo = true }',function(){
+    assert.equal("{ foo = true }",main.testThis('foo=2<=2;'));
+  });
+  it('Less Equal F:    foo=2<=1;       >> { foo = false }',function(){
+    assert.equal("{ foo = false }",main.testThis('foo=2<=1;'));
+  });
+});
+
+describe('Boolean Operations', function(){
+  it('Negation:  foo=!true;        >> { foo = false }',function(){
+    assert.equal("{ foo = false }",main.testThis('foo=!true;'));
+  });
+  it('And True:  foo=true&&true;   >> { foo = true }',function(){
+    assert.equal("{ foo = true }",main.testThis('foo=true&&true;'));
+  });
+  it('And false: foo=true&&false;  >> { foo = false }',function(){
+    assert.equal("{ foo = false }",main.testThis('foo=false&&true;'));
+  });
+  it('Or True:   foo=true||false;  >> { foo = true }',function(){
+    assert.equal("{ foo = true }",main.testThis('foo=true||false;'));
+  });
+  it('Or False:  foo=false||false; >> { foo = false }',function(){
+    assert.equal("{ foo = false }",main.testThis('foo=false||false;'));
+  });
+});
