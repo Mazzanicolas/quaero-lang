@@ -14,7 +14,7 @@ import { State } from './interpreter/State';
 console.log("While :: REPL");
 
 var state = new State();
-var TESTING = false; // < Cambiar al estado de testing
+var TESTING = true; // < Cambiar al estado de testing
 
 export function testThis(input){
   state = new State();
@@ -24,7 +24,7 @@ export function testThis(input){
   const nodes: Stmt[] = parser.results;
   const node = nodes[0];
   state = node.evaluate(state);
-  return state.toString();
+  return state;
 }
 //console.log(testThis('foo="\"\u00a1Hola\t!\"";'));
 while (!TESTING) {

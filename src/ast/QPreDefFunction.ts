@@ -6,19 +6,17 @@ import { State } from '../interpreter/State';
 export class QPreDefFunction implements Exp {
   id:string;
   val:any[];
-  stmt: [Stmt];
   ret:any;
 
-  constructor(id,val,stmt,ret) {
+  constructor(id,val,ret) {
     this.id = id;
     this.val = val;
-    this.stmt = stmt;
     this.ret = ret;
   }
 
   toString(): string {
     //return `QFunction()`;
-    return `QFunction(${this.id},(${this.val}),${this.stmt.toString()})`;
+    return `QFunction(${this.id},(${this.val}))`;
   }
 
   unparse(): string {
@@ -26,7 +24,7 @@ export class QPreDefFunction implements Exp {
   }
 
   evaluate(state: State) {
-    state.set(this.id,[this.val,this.stmt,this.ret]);
+    state.set(this.id,[this.val,this.ret]);
     return state;
   }
 }

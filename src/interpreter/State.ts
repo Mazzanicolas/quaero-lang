@@ -1,12 +1,13 @@
-export class State {
+  export class State {
 
   vars: Map<string, any>;
 
   constructor() {
     this.vars = new Map<string, any>();
+    //Hacer una clase function loader
   }
 
-  toString(): string {  
+  toString(): string {
     return `{ ${Array.from(this.vars.entries()).map(([key, value]) => (`${key} = ${value}`)).join("; ")} }`;
   }
 

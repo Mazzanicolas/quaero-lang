@@ -6,26 +6,23 @@ import { State } from '../interpreter/State';
 export class QuaeroFunction implements Exp {
   id:string;
   val:any[];
-  stmt: [Stmt];
   ret:any;
 
-  constructor(id,val,stmt,ret) {
+  constructor(id,val,ret) {
     this.id = id;
     this.val = val;
-    this.stmt = stmt;
     this.ret = ret;
   }
 
   toString(): string {
-    return `QFunction(${this.id},(${this.val}),${this.stmt.toString()})`;
+    return "";
   }
 
   unparse(): string {
-    return `QFunction`;
+    return "";
   }
 
   evaluate(state: State) {
-    state.set(this.id,[this.val,this.stmt,this.ret]);
     return state;
   }
 }
