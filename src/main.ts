@@ -17,6 +17,7 @@ var state = new State();
 var TESTING = true; // < Cambiar al estado de testing
 
 export function testThis(input){
+  state = new State();
   const lexer = new MyLexer(tokens);
   const parser = new Parser(ParserRules, ParserStart, { lexer });
   parser.feed(input);
@@ -25,12 +26,11 @@ export function testThis(input){
   state = node.evaluate(state);
   return state.toString();
 }
-
+//console.log(testThis('foo="\"\u00a1Hola\t!\"";'));
 while (!TESTING) {
   const lexer = new MyLexer(tokens);
   const parser = new Parser(ParserRules, ParserStart, { lexer });
-
-  const input = readlineSync.question('> ');
+  const input = readlineSync.question('>>> ');
 
   try {
     // Parse user input
