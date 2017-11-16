@@ -21,15 +21,15 @@ npm install -g nearley
 ## Build
 
 Clonar el repositorio y moverse en un terminal al directorio de trabajo.
-Instalar dependencias utilizando 
+Instalar dependencias utilizando :
 ```
 npm install
 ```
-Ejeutar usando 
+Ejeutar usando :
 ```
 gulp && node bin/main.js
 ```
-Ejecutar test usando
+Ejecutar test usando (por lo menos haber usado "gulp" una vez):
 ```
  npm run test
 ```
