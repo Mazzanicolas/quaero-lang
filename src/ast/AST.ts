@@ -44,6 +44,8 @@ export * from './QUnion';
 export * from './QDifference';
 export * from './QGetKey';
 export * from './QFunction';
+export * from './QPreDefFunction';
+export * from './QuaeroFunction';
 export * from './QFCall';
 export * from './QConditionalExp';
 export * from './QFor';
