@@ -18,4 +18,11 @@
   set(id: string, value: any) {
     this.vars.set(id, value);
   }
+
+  clone(newState:State): any {
+    this.vars.forEach((value: string, key: string) => {
+      newState.set(key, value);
+    });
+    return newState;
+  }
 }
