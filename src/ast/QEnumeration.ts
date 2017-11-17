@@ -12,17 +12,13 @@ export class QEnumeration implements Exp {
   eleC:Numeral;
 
   constructor(elementListA,elementListB,elementListC) {
-    console.log("¿¿¿¿¿?????");
-    console.log(elementListA);
-    console.log(elementListB);
-    console.log(elementListC);
     this.eleA = elementListA;
     this.eleB = elementListB;
     this.eleC = elementListC;
   }
 
   toString(): string {
-    return `QList()`;
+    return `QEnumeration()`;
   }
 
   unparse(): string {

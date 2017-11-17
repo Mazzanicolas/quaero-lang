@@ -3,25 +3,34 @@ import { State } from '../interpreter/State';
 import { QList } from './QList';
 import { Assignment } from './Assignment';
 import { Numeral } from './Numeral';
+import { QEnumeration } from './QEnumeration';
 
 /**
   Representación de sumas.
 */
 export class QFor implements Exp {
 
-  lcond:string;
-  rcond:any;
+  lident:string;
+  lvalue:any;
+  rident:string;
+  rvalue:any;
+  forCond:Exp;
   forStmt:Stmt;
+  forType:number;
   temporalState:State;
 
-  constructor(lcond,rcond,stmt) {
-    this.lcond = lcond;
-    this.rcond = rcond;
+  constructor(lident,lvalue,rident,rvalue,forcond,stmt,type) {
+    this.lident = lident;
+    this.lvalue = lvalue;
+    this.rident = rident;
+    this.rvalue = rvalue;
+    this.forCond = forcond;
     this.forStmt = stmt;
+    this.forType = type;
   }
 
   toString(): string {
-    return `QFor(${this.lcond},(${this.rcond}),${this.forStmt.toString()})`;
+    return `QFor(${this.lident},(${this.lvalue}),${this.forStmt.toString()})`;
   }
 
   unparse(): string {
@@ -30,22 +39,41 @@ export class QFor implements Exp {
 
   evaluate(state: State) {
     var that = this;
-    if (typeof that.rcond == 'string') {
-      var forList:any[] = state.get(that.rcond);
-      that.temporalState  = new State();
-      state.clone(that.temporalState);
-      forList.forEach(function(value:Numeral){
-          that.temporalState.set(that.lcond, value);
-          that.temporalState = that.forStmt.evaluate(that.temporalState);
+    that.temporalState  = new State();
+    state.clone(that.temporalState);
+    if (this.forType==1) {
+      if (typeof that.lvalue == 'string') {
+        var forList:any[] = state.get(that.lvalue);
+        forList.forEach(function(value:Numeral){
+            that.temporalState.set(that.lident, value);
+            that.temporalState = that.forStmt.evaluate(that.temporalState);
+        });
+      }
+      that.temporalState.vars.forEach((value, key:string) => {
+        if (key != that.lident) {
+          state.set(key, value);
+        }
+      });
+    } else if (this.forType == 2) {
+      that.lvalue = <QEnumeration> that.lvalue;
+      var llist = that.lvalue.evaluate(state);
+      that.rvalue = <QEnumeration> that.rvalue;
+      var rlist = that.rvalue.evaluate(state);
+      for (let lvalue of llist) {
+        for (let rvalue of rlist) {
+          that.temporalState.set(that.lident, lvalue);
+          that.temporalState.set(that.rident, rvalue);
+          if (that.forCond.evaluate(that.temporalState)) {
+            that.temporalState = that.forStmt.evaluate(that.temporalState);
+          }
+        }
+      }
+      that.temporalState.vars.forEach((value, key:string) => {
+        if (key != that.lident && key != that.rident) {
+          state.set(key, value);
+        }
       });
     }
-
-    that.temporalState.vars.forEach((value, key:string) => {
-      if (key != that.lcond) {
-        state.set(key, value);
-      }
-    });
-
     return state;
   }
 }
