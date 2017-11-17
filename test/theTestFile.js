@@ -141,4 +141,7 @@ describe('For Loop', function(){
   it('1st Type: {x=1;foo=1;xs=[1,2,3,4,5]} - for (x <- xs) y=y*x;  >> { foo = 120 }',function(){
     assert.equal(120,main.testThis('{x=1;foo=1;xs=[1,2,3,4,5];for (x <- xs) foo=foo*x;}').get("foo"));
   });
+  it('2nd Type: { foo=0; } - for (x <- [1..3], y <- [1..3], x <= y) foo = foo + x * y;  >> { foo = 25; }',function(){
+    assert.equal(25,main.testThis('{foo=0;for (x <- [1..3], y <- [1..3], x <= y) foo = foo + x * y;}').get("foo"));
+  });
 });

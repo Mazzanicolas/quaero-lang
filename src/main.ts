@@ -9,6 +9,7 @@ import { ParserRules, ParserStart } from "./parser/Grammar";
 import { ASTNode, Stmt } from './ast/AST';
 
 import { State } from './interpreter/State';
+import { Loader } from './ast/Loader';
 
 
 console.log("While :: REPL");
