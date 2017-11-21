@@ -19,6 +19,10 @@
     this.vars.set(id, value);
   }
 
+  remove(id: string) {
+    this.vars.delete(id);
+  }
+
   clone(newState:State): any {
     this.vars.forEach((value: string, key: string) => {
       newState.set(key, value);

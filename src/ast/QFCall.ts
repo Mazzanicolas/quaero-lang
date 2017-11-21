@@ -16,6 +16,8 @@ export class QFCall implements Exp {
   constructor(id,val) {
     this.id = id;
     this.val = val.reverse();
+
+    console.log(`qfcall ${this.val.toString()}`);
   }
 
   toString(): string {
@@ -37,7 +39,7 @@ export class QFCall implements Exp {
         this.temporalState = new Assignment(funct[0][j], this.val[j]).evaluate(this.temporalState);
       }
       this.temporalState = new Sequence(funct[1]).evaluate(this.temporalState);
-      toReturn = funct[2].evaluate(this.temporalState);
+      toReturn = this.temporalState.get("return");
     }
     return toReturn;
   }

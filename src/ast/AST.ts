@@ -46,6 +46,7 @@ export * from './QGetKey';
 export * from './QFunction';
 export * from './QPreDefFunction';
 export * from './QuaeroFunction';
+export * from './QFReturn';
 export * from './QFCall';
 export * from './QPreCall';
 export * from './QConditionalExp';

@@ -39,6 +39,7 @@ import {
   QDifference,
   QGetKey,
   QFunction,
+  QFReturn,
   QFCall,
   QConditionalExp,
   QFor,
@@ -58,16 +59,17 @@ const lexer = new MyLexer(tokens);
 
 stmt ->
     stmtelse                              {% id %}
-  | "if" "(" exp ")" stmt                  {% ([, , cond, , thenBody]) => (new IfThen(cond, thenBody)) %}
+  | "if" "(" exp ")" stmt                 {% ([, , cond, , thenBody]) => (new IfThen(cond, thenBody)) %}
+  | "return" exp ";"                      {% ([, exp]) => (new QFReturn(exp)) %}
 
 stmtelse ->
     identifier "=" exp ";"                {% ([id, , exp, ]) => (new Assignment(id, exp)) %}
   | "{" stmt:* "}"                        {% ([, statements, ]) => (new Sequence(statements)) %}
   | "if" "(" exp ")" stmtelse "else" stmt {% ([, ,cond, , thenBody, , elseBody]) => (new IfThenElse(cond, thenBody, elseBody)) %}
-  | "function" identifier "(" functionValue ")" "{" stmt:* "return" exp ";" "}" {% ([,id, , val , , ,stmt, , ret, ,]) => (new QFunction(id,val,stmt,ret)) %}
+  | "function" identifier "(" functionValue ")" "{" stmt:* "}" {% ([,id, , val , , ,stmt, ]) => (new QFunction(id,val,stmt)) %} 
   | "for" "(" identifier "<-" identifier ")" stmt {% ([, ,lcond, , rcond, , stmt]) => (new QFor(lcond, rcond,null,null,null,stmt, 1)) %}
   | "for" "(" identifier "<-" range "," identifier "<-" range "," exp ")" stmt {% ([, ,lident, ,lrange, ,riden, ,rrange, , cond, ,stmt]) => (new QFor(lident, lrange, riden, rrange, cond, stmt, 2)) %}
-  #| "for" "(" functionCallValue ")" stmt:* {% ([, ,cond, , thenBody, , elseBody]) => (new IfThenElse(cond, thenBody, elseBody)) %}
+
 
 functionValue->
   identifier                              {% ([id]) => ([id]) %}

@@ -16,7 +16,7 @@ console.log("While :: REPL");
 
 var state = new State();
 var load = new Loader();
-var TESTING = true; // < Cambiar al estado de testing
+var TESTING = false; // < Cambiar al estado de testing
 
 export function testThis(input){
   state = new State();
