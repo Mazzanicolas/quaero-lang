@@ -43,6 +43,7 @@ import {
   QFCall,
   QConditionalExp,
   QFor,
+  ExpAsStmt,
   QEnumeration
 } from '../ast/AST';
 
@@ -64,9 +65,10 @@ stmt ->
 
 stmtelse ->
     identifier "=" exp ";"                {% ([id, , exp, ]) => (new Assignment(id, exp)) %}
+  | exp ";"                               {% ([exp, ]) => (new ExpAsStmt(exp)) %}
   | "{" stmt:* "}"                        {% ([, statements, ]) => (new Sequence(statements)) %}
   | "if" "(" exp ")" stmtelse "else" stmt {% ([, ,cond, , thenBody, , elseBody]) => (new IfThenElse(cond, thenBody, elseBody)) %}
-  | "function" identifier "(" functionValue ")" "{" stmt:* "}" {% ([,id, , val , , ,stmt, ]) => (new QFunction(id,val,stmt)) %} 
+  | "function" identifier "(" functionValue ")" "{" stmt:* "}" {% ([,id, , val , , ,stmt, ]) => (new QFunction(id,val,stmt)) %}
   | "for" "(" identifier "<-" identifier ")" stmt {% ([, ,lcond, , rcond, , stmt]) => (new QFor(lcond, rcond,null,null,null,stmt, 1)) %}
   | "for" "(" identifier "<-" range "," identifier "<-" range "," exp ")" stmt {% ([, ,lident, ,lrange, ,riden, ,rrange, , cond, ,stmt]) => (new QFor(lident, lrange, riden, rrange, cond, stmt, 2)) %}
 
@@ -133,7 +135,7 @@ value ->
   | "(" exp "if" exp "else" exp ")" {% ([, iftrue, , cond , , iffalse, ]) => (new QConditionalExp(cond, iftrue, iffalse)) %}
   #Eliminar ambiguedad ^ ^ ^ si es que tiene
   | collection              {% id %}
-  | range {% id %}
+  | range                   {% id %}
 
 # Collections
 

@@ -156,4 +156,7 @@ describe('User Functions', function(){
   it('More than one return 2- function sumarara(a,b) { if (a==b) { return 0; } else { return a+b; }}; foo = sumarara(2,3); >> { foo = 5 }',function(){
     assert.equal(0,main.testThis('{function sumarara(a,b) { if (a==b) { return 0; } else { return a+b; }} foo = sumarara(2,2);}').get("foo"));
   });
+  it('function f(a,b){while(a<b) a=a+1; return a;}',function(){
+    assert.equal(2,main.testThis('{function f(a,b){while(a<b) a=a+1; return a;} foo = f(1,3);}').get("foo"));
+  });
 });

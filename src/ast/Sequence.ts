@@ -30,7 +30,7 @@ export class Sequence implements Stmt {
 
   evaluate(state: State): State {
     //no return variable defined.
-    state.remove("return");
+    //state.remove("return");
     for(var i=0;i<this.statements.length;i++){
         state= this.statements[i].evaluate(state);
         if (state.get("return") != null) {

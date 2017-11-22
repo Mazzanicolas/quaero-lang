@@ -12,7 +12,7 @@ export class QFReturn implements Stmt {
   }
 
   toString(): string {
-    return `QFReturn(${this.exp.toString()}`;
+    return `QFReturn(${this.exp.toString()})`;
   }
 
   unparse(): string {

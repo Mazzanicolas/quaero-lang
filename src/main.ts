@@ -16,6 +16,7 @@ console.log("While :: REPL");
 
 var state = new State();
 var load = new Loader();
+load.loadPreFunctions(state);
 var TESTING = true; // < Cambiar al estado de testing
 
 export function testThis(input){
@@ -30,9 +31,9 @@ export function testThis(input){
 }
 //console.log(testThis('foo="\"\u00a1Hola\t!\"";'));
 while (!TESTING) {
-  const lexer = new MyLexer(tokens);
+  const lexer  = new MyLexer(tokens);
   const parser = new Parser(ParserRules, ParserStart, { lexer });
-  const input = readlineSync.question('>>> ');
+  const input  = readlineSync.question('>>> ');
 
   try {
     // Parse user input

@@ -15,7 +15,7 @@ export class QFCall implements Exp {
 
   constructor(id,val) {
     this.id = id;
-    this.val = val.reverse();
+    this.val = val;//.reverse();
   }
 
   toString(): string {
@@ -30,6 +30,13 @@ export class QFCall implements Exp {
   evaluate(state: State) :any {
     let funct:any[] = state.get(this.id);
     var toReturn:any;
+    //Merge v v v
+    let customfunct:any[] = state.getFunction(this.id);
+    if(customfunct instanceof Function){
+      customfunct.apply(null, this.val);
+      return state;
+    }
+    //Merge ^ ^ ^
     //check parms qty & function call parms qty.
     if (this.val.length == funct[0].length) {
       this.temporalState  = new State();

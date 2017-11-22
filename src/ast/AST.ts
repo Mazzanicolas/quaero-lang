@@ -51,4 +51,5 @@ export * from './QFCall';
 export * from './QPreCall';
 export * from './QConditionalExp';
 export * from './QFor';
+export * from './ExpAsStmt';
 export * from './QEnumeration';

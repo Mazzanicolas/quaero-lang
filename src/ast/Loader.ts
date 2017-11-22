@@ -7,12 +7,7 @@ export class Loader {
   }
 
   loadPreFunctions(state: State){
-    state.set("print",function(line){console.log(line);});
-    //var pfPrint = new("print",function(line){console.log(line);});
-    //pfPrint.set(state);
-    //Grammar
-    //new QPreCall("print",value);
-    //state.set("print",function(line){console.log(line);});
+    state.setFunction("print",function(line){console.log(line.evaluate(state));return;});
     return state;
   }
 
