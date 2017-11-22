@@ -16,8 +16,6 @@ export class QFCall implements Exp {
   constructor(id,val) {
     this.id = id;
     this.val = val.reverse();
-
-    console.log(`qfcall ${this.val.toString()}`);
   }
 
   toString(): string {

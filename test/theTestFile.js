@@ -145,3 +145,15 @@ describe('For Loop', function(){
     assert.equal(25,main.testThis('{foo=0;for (x <- [1..3], y <- [1..3], x <= y) foo = foo + x * y;}').get("foo"));
   });
 });
+
+describe('User Functions', function(){
+  it('One Return - function suma(a,b) { return a+b }; foo = suma(2,3); >> { foo = 5 }',function(){
+    assert.equal(5,main.testThis('{function suma(a,b) {return a+b;} foo = suma(2,3);}').get("foo"));
+  });
+  it('More than one return 1- function sumarara(a,b) { if (a==b) { return 0; } else { return a+b; }}; foo = sumarara(2,3); >> { foo = 5 }',function(){
+    assert.equal(5,main.testThis('{function sumarara(a,b) { if (a==b) { return 0; } else { return a+b; }} foo = sumarara(2,3);}').get("foo"));
+  });
+  it('More than one return 2- function sumarara(a,b) { if (a==b) { return 0; } else { return a+b; }}; foo = sumarara(2,3); >> { foo = 5 }',function(){
+    assert.equal(0,main.testThis('{function sumarara(a,b) { if (a==b) { return 0; } else { return a+b; }} foo = sumarara(2,2);}').get("foo"));
+  });
+});
