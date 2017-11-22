@@ -147,16 +147,55 @@ describe('For Loop', function(){
 });
 
 describe('User Functions', function(){
-  it('One Return - function suma(a,b) { return a+b }; foo = suma(2,3); >> { foo = 5 }',function(){
+  it('One Return:             function suma(a,b){return a+b};foo=suma(2,3); >> { foo = 5 }',function(){
     assert.equal(5,main.testThis('{function suma(a,b) {return a+b;} foo = suma(2,3);}').get("foo"));
   });
-  it('More than one return 1- function sumarara(a,b) { if (a==b) { return 0; } else { return a+b; }}; foo = sumarara(2,3); >> { foo = 5 }',function(){
+  it('More than one return 1: function sumarara(a,b){if(a==b){return 0;}else{return a+b;}}; foo=sumarara(2,3); >> { foo = 5 }',function(){
     assert.equal(5,main.testThis('{function sumarara(a,b) { if (a==b) { return 0; } else { return a+b; }} foo = sumarara(2,3);}').get("foo"));
   });
-  it('More than one return 2- function sumarara(a,b) { if (a==b) { return 0; } else { return a+b; }}; foo = sumarara(2,3); >> { foo = 5 }',function(){
+  it('More than one return 2: function sumarara(a,b){if(a==b){return 0;}else{return a+b;}}; foo = sumarara(2,2); >> { foo = 0 }',function(){
     assert.equal(0,main.testThis('{function sumarara(a,b) { if (a==b) { return 0; } else { return a+b; }} foo = sumarara(2,2);}').get("foo"));
   });
-  it('function f(a,b){while(a<b) a=a+1; return a;}',function(){
-    assert.equal(2,main.testThis('{function f(a,b){while(a<b) a=a+1; return a;} foo = f(1,3);}').get("foo"));
+});
+
+describe('Quareo Functions', function(){
+  it('div: foo=div(10,3);        >> { foo = 3 }',function(){
+    assert.equal(3,main.testThis('foo=div(10,3);').get("foo"));
+  });
+  it('div: foo=div(10.5,3.3);    >> { foo = 3 }',function(){
+    assert.equal(3,main.testThis('foo=div(10.5,3.3);').get("foo"));
+  });
+  it('mod: foo=mod(10,3);        >> { foo = 1 }',function(){
+    assert.equal(1,main.testThis('foo=mod(10,3);').get("foo"));
+  });
+  it('div: foo=div(5,5);         >> { foo = 0 }',function(){
+    assert.equal(0,main.testThis('foo=mod(5,5);').get("foo"));
+  });
+  it('int: foo=int("10");        >> { foo = 10 }',function(){
+    assert.equal(10,main.testThis('foo=int("10");').get("foo"));
+  });
+  it('number: foo=number(1.5);   >> { foo = 1.5 }',function(){
+    assert.equal(1.5,main.testThis('foo=number(1.5);').get("foo"));
+  });
+  it('boolean: foo=boolean([]);  >> { foo = false }',function(){
+    assert.equal(false,main.testThis('foo=boolean([]);').get("foo"));
+  });
+  it('boolean: foo=boolean(0);   >> { foo = false }',function(){
+    assert.equal(false,main.testThis('foo=boolean(0);').get("foo"));
+  });
+  it('boolean: foo=boolean({});  >> { foo = false }',function(){
+    assert.equal(false,main.testThis('foo=boolean({});').get("foo"));
+  });
+  it('boolean: foo=boolean(null);>> { foo = false }',function(){
+    assert.equal(false,main.testThis('foo=boolean(null);').get("foo"));
+  });
+  it('boolean: foo=boolean(10);  >> { foo = true }',function(){
+    assert.equal(true,main.testThis('foo=boolean(10);').get("foo"));
+  });
+  it('boolean: foo=boolean("1"); >> { foo = true }',function(){
+    assert.equal(true,main.testThis('foo=boolean("1");').get("foo"));
+  });
+  it('boolean: foo=boolean([2]); >> { foo = true }',function(){
+    assert.equal(true,main.testThis('foo=boolean([2]);').get("foo"));
   });
 });

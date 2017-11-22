@@ -24,7 +24,9 @@ export class QFunction implements Exp {
   }
 
   evaluate(state: State) {
-    state.set(this.id,[this.val,this.stmt]);
+    if(state.getFunction(this.id)==null){
+      state.set(this.id,[this.val,this.stmt]);
+    } else {console.log("La funcion ya existe");}
     return state;
   }
 }

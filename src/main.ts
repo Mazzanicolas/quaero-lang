@@ -21,6 +21,8 @@ var TESTING = true; // < Cambiar al estado de testing
 
 export function testThis(input){
   state = new State();
+  var load = new Loader();
+  load.loadPreFunctions(state);
   const lexer = new MyLexer(tokens);
   const parser = new Parser(ParserRules, ParserStart, { lexer });
   parser.feed(input);
