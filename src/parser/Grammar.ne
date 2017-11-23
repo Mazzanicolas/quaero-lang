@@ -44,6 +44,7 @@ import {
   QConditionalExp,
   QFor,
   ExpAsStmt,
+  WhileDo,
   QEnumeration
 } from '../ast/AST';
 
@@ -67,6 +68,7 @@ stmtelse ->
     identifier "=" exp ";"                {% ([id, , exp, ]) => (new Assignment(id, exp)) %}
   | exp ";"                               {% ([exp, ]) => (new ExpAsStmt(exp)) %}
   | "{" stmt:* "}"                        {% ([, statements, ]) => (new Sequence(statements)) %}
+  | "while" exp "do" stmt                 {% ([, cond, , body]) => (new WhileDo(cond, body)) %}
   | "if" "(" exp ")" stmtelse "else" stmt {% ([, ,cond, , thenBody, , elseBody]) => (new IfThenElse(cond, thenBody, elseBody)) %}
   | "function" identifier "(" functionValue ")" "{" stmt:* "}" {% ([,id, , val , , ,stmt, ]) => (new QFunction(id,val,stmt)) %}
   | "for" "(" identifier "<-" identifier ")" stmt {% ([, ,lcond, , rcond, , stmt]) => (new QFor(lcond, rcond,null,null,null,stmt, 1)) %}

@@ -198,4 +198,10 @@ describe('Quareo Functions', function(){
   it('boolean: foo=boolean([2]); >> { foo = true }',function(){
     assert.equal(true,main.testThis('foo=boolean([2]);').get("foo"));
   });
+  it('boolean: foo=boolean({});  >> { foo = false }',function(){
+    assert.equal(false,main.testThis('foo=boolean({});').get("foo"));
+  });
+  it('boolean: foo=boolean("");  >> { foo = false }',function(){
+    assert.equal(false,main.testThis('foo=boolean("");').get("foo"));
+  });
 });

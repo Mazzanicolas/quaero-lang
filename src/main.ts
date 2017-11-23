@@ -12,7 +12,7 @@ console.log("While :: REPL");
 var state = new State();
 var load = new Loader();
 load.loadPreFunctions(state);
-var TESTING = false; // < Cambiar al estado de testing
+var TESTING = true; // < Cambiar al estado de testing
 
 export function testThis(input){
   state = new State();

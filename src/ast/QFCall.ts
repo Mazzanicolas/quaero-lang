@@ -33,7 +33,7 @@ export class QFCall implements Exp {
     //Merge v v v
     let customfunct:any[] = state.getFunction(this.id);
     if(customfunct instanceof Function){
-      return customfunct.apply(null, this.val.reverse());;
+      return customfunct.apply(null, this.val.reverse());
     }
     //Merge ^ ^ ^
     //check parms qty & function call parms qty.
