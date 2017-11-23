@@ -137,11 +137,19 @@ describe('Boolean Operations', function(){
   });
 });
 
-describe('For Loop', function(){
-  it('1st Type: {x=1;foo=1;xs=[1,2,3,4,5]} - for (x <- xs) y=y*x;  >> { foo = 120 }',function(){
-    assert.equal(120,main.testThis('{x=1;foo=1;xs=[1,2,3,4,5];for (x <- xs) foo=foo*x;}').get("foo"));
+
+describe('Listas y conjuntos', function(){
+
+  it('Compare Lists:    foo=[1,2,3]==[1,2,3];      >> { foo = true }',function(){
+    assert.equal(true,main.testThis('foo=[1,2,3]==[1,2,3];').get("foo"));
   });
-  it('2nd Type: { foo=0; } - for (x <- [1..3], y <- [1..3], x <= y) foo = foo + x * y;  >> { foo = 25; }',function(){
-    assert.equal(25,main.testThis('{foo=0;for (x <- [1..3], y <- [1..3], x <= y) foo = foo + x * y;}').get("foo"));
+  it('Compare Lists:    foo=[1,2,3]==[2,3,4];      >> { foo = false }',function(){
+    assert.equal(false,main.testThis('foo=[1,2,3]==[2,3,4];').get("foo"));
   });
+  it('Compare Lists:    foo=[a,b,c]==[a,b,c];      >> { foo = true }',function(){
+  assert.equal("{ foo = true }",main.testThis('foo=[a,b,c]==[a,b,c];'));
+});
+it('Compare Lists:    foo=[a,b,c]==[b,d,f];      >> { foo = false }',function(){
+  assert.equal("{ foo = false }",main.testThis('foo=[a,b,c]==[b,d,f];'));
+});
 });

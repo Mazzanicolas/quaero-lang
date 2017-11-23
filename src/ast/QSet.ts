@@ -13,11 +13,11 @@ export class QSet implements Exp {
   }
 
   toString(): string {
-    return `QList()`;
+    return `QSet()`;
   }
 
   unparse(): string {
-    return `QListo()`;
+    return `QSet()`;
   }
 
   push(element:any):any{

@@ -21,6 +21,6 @@ export class QString implements Exp {
   }
 
   evaluate(state: State): any {
-    return this.value;
+    return +this.value;
   }
 }

@@ -23,6 +23,22 @@ export class CompareGreat implements Exp {
   }
 
   evaluate(state: State): any {
-    return this.lhs.evaluate(state) > this.rhs.evaluate(state);
-  }
+    var aux = false;
+    if (Array.isArray(this.lhs.evaluate(state)) && Array.isArray(this.rhs.evaluate(state)) ){
+        for (var i = 0; i < this.rhs.evaluate(state).length; i ++){
+          for (var j = 0; j < this.lhs.evaluate(state).length; j ++){
+              if (this.lhs.evaluate(state)[i] == this.rhs.evaluate(state)[j]){
+                aux = true;
+              }
+          }
+          if (aux == false){
+            return false;
+          }
+        }
+        return true;
+      }
+      else{
+        return JSON.stringify(this.lhs) > JSON.stringify(this.rhs);
+      }
+    }
 }

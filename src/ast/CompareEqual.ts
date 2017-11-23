@@ -23,6 +23,9 @@ export class CompareEqual implements Exp {
   }
 
   evaluate(state: State): any {
-    return this.lhs.evaluate(state) == this.rhs.evaluate(state);
-  }
+      if (Array.isArray(this.lhs.evaluate(state)) && Array.isArray(this.rhs.evaluate(state))){
+        return JSON.stringify(this.lhs.evaluate(state)) == JSON.stringify(this.rhs.evaluate(state));
+        }
+        return this.lhs.evaluate(state) == this.rhs.evaluate(state);
+      }
 }

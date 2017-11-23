@@ -143,13 +143,17 @@ list->
    "[" "]"                  {% ([id]) => (new QList([])) %}
   | "[" elements "]"        {% ([,elem, ]) => (elem) %}
 
+elements ->
+        collectionValue "," elements {% ([element, ,elements]) => (elements.push(element)) %}
+      | collectionValue       {% ([element]) => (new QList([element])) %}
+
 set ->
    "{" "}"                   {% ([, values, ]) => (new QSet(values)) %}
-  | "{" elements "}"         {% ([,elem, ]) => (elem) %}
+  | "{" elementSet "}"         {% ([,elem, ]) => (elem) %}
 
-elements ->
-      collectionValue "," elements {% ([element, ,elements]) => (elements.push(element)) %}
-    | collectionValue       {% ([element]) => (new QList([element])) %}
+elementSet ->
+      collectionValue "," elementSet {% ([elem, ,elementSet]) => (elementSet.push(elem)) %}
+    | collectionValue       {% ([elem]) => (new QSet([elem])) %}
 
 range ->
       "[" value ".." value "]"   {% ([, elemA, , elemC, ]) => (new QEnumeration(elemA, null, elemC)) %}
