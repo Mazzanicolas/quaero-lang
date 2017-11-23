@@ -1,23 +1,18 @@
 import * as readlineSync from "readline-sync";
-
 import { Parser } from "nearley";
-
 import { tokens } from "./parser/Tokens";
 import { MyLexer } from "./parser/Lexer"
 import { ParserRules, ParserStart } from "./parser/Grammar";
-
 import { ASTNode, Stmt } from './ast/AST';
-
 import { State } from './interpreter/State';
 import { Loader } from './ast/Loader';
-
 
 console.log("While :: REPL");
 
 var state = new State();
 var load = new Loader();
 load.loadPreFunctions(state);
-var TESTING = true; // < Cambiar al estado de testing
+var TESTING = false; // < Cambiar al estado de testing
 
 export function testThis(input){
   state = new State();
