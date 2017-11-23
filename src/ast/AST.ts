@@ -6,6 +6,7 @@ export * from './Assignment';
 export * from './IfThenElse';
 export * from './IfThen';
 export * from './Sequence';
+export * from './WhileDo';
 
 // AExp
 export * from './Addition';
@@ -44,10 +45,9 @@ export * from './QUnion';
 export * from './QDifference';
 export * from './QGetKey';
 export * from './QFunction';
-export * from './QPreDefFunction';
-export * from './QuaeroFunction';
+export * from './QFReturn';
 export * from './QFCall';
-export * from './QPreCall';
 export * from './QConditionalExp';
 export * from './QFor';
+export * from './ExpAsStmt';
 export * from './QEnumeration';

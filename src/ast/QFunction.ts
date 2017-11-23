@@ -7,13 +7,11 @@ export class QFunction implements Exp {
   id:string;
   val:any[];
   stmt: [Stmt];
-  ret:any;
 
-  constructor(id,val,stmt,ret) {
+  constructor(id,val,stmt) {
     this.id = id;
     this.val = val;
     this.stmt = stmt;
-    this.ret = ret;
   }
 
   toString(): string {
@@ -26,7 +24,9 @@ export class QFunction implements Exp {
   }
 
   evaluate(state: State) {
-    state.set(this.id,[this.val,this.stmt,this.ret]);
+    if(state.getFunction(this.id)==null){
+      state.set(this.id,[this.val,this.stmt]);
+    } else {console.log("La funcion ya existe");}
     return state;
   }
 }

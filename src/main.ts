@@ -1,25 +1,26 @@
 import * as readlineSync from "readline-sync";
-
 import { Parser } from "nearley";
-
 import { tokens } from "./parser/Tokens";
 import { MyLexer } from "./parser/Lexer"
 import { ParserRules, ParserStart } from "./parser/Grammar";
-
 import { ASTNode, Stmt } from './ast/AST';
-
 import { State } from './interpreter/State';
 import { Loader } from './ast/Loader';
-
 
 console.log("While :: REPL");
 
 var state = new State();
 var load = new Loader();
+<<<<<<< HEAD
+=======
+load.loadPreFunctions(state);
+>>>>>>> 7d794bc2e3cdfac99a41ab03dcd4f636961ed024
 var TESTING = false; // < Cambiar al estado de testing
 
 export function testThis(input){
   state = new State();
+  var load = new Loader();
+  load.loadPreFunctions(state);
   const lexer = new MyLexer(tokens);
   const parser = new Parser(ParserRules, ParserStart, { lexer });
   parser.feed(input);
@@ -30,9 +31,9 @@ export function testThis(input){
 }
 //console.log(testThis('foo="\"\u00a1Hola\t!\"";'));
 while (!TESTING) {
-  const lexer = new MyLexer(tokens);
+  const lexer  = new MyLexer(tokens);
   const parser = new Parser(ParserRules, ParserStart, { lexer });
-  const input = readlineSync.question('>>> ');
+  const input  = readlineSync.question('>>> ');
 
   try {
     // Parse user input

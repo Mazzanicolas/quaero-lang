@@ -39,9 +39,12 @@ import {
   QDifference,
   QGetKey,
   QFunction,
+  QFReturn,
   QFCall,
   QConditionalExp,
   QFor,
+  ExpAsStmt,
+  WhileDo,
   QEnumeration
 } from '../ast/AST';
 
@@ -58,16 +61,20 @@ const lexer = new MyLexer(tokens);
 
 stmt ->
     stmtelse                              {% id %}
-  | "if" "(" exp ")" stmt                  {% ([, , cond, , thenBody]) => (new IfThen(cond, thenBody)) %}
+  | "if" "(" exp ")" stmt                 {% ([, , cond, , thenBody]) => (new IfThen(cond, thenBody)) %}
+  | "return" exp ";"                      {% ([, exp]) => (new QFReturn(exp)) %}
 
 stmtelse ->
     identifier "=" exp ";"                {% ([id, , exp, ]) => (new Assignment(id, exp)) %}
+  | exp ";"                               {% ([exp, ]) => (new ExpAsStmt(exp)) %}
   | "{" stmt:* "}"                        {% ([, statements, ]) => (new Sequence(statements)) %}
+  | "while" exp "do" stmt                 {% ([, cond, , body]) => (new WhileDo(cond, body)) %}
   | "if" "(" exp ")" stmtelse "else" stmt {% ([, ,cond, , thenBody, , elseBody]) => (new IfThenElse(cond, thenBody, elseBody)) %}
-  | "function" identifier "(" functionValue ")" "{" stmt:* "return" exp ";" "}" {% ([,id, , val , , ,stmt, , ret, ,]) => (new QFunction(id,val,stmt,ret)) %}
-  | "for" "(" identifier "<-" identifier ")" stmt {% ([, ,lcond, , rcond, , stmt]) => (new QFor(lcond, rcond,null,null,null,stmt, 1)) %}
-  | "for" "(" identifier "<-" range "," identifier "<-" range "," exp ")" stmt {% ([, ,lident, ,lrange, ,riden, ,rrange, , cond, ,stmt]) => (new QFor(lident, lrange, riden, rrange, cond, stmt, 2)) %}
-  #| "for" "(" functionCallValue ")" stmt:* {% ([, ,cond, , thenBody, , elseBody]) => (new IfThenElse(cond, thenBody, elseBody)) %}
+  | "function" identifier "(" ")" "{" stmt:* "}" {% ([,id, , , ,stmt, ]) => (new QFunction(id,[],stmt)) %}
+  | "function" identifier "(" functionValue ")" "{" stmt:* "}" {% ([,id, , val , , ,stmt, ]) => (new QFunction(id,val,stmt)) %}
+  #| "for" "(" identifier "<-" identifier ")" stmt {% ([, ,lcond, , rcond, , stmt]) => (new QFor(lcond, rcond,null,null,null,stmt, 1)) %}
+  #| "for" "(" identifier "<-" range "," identifier "<-" range "," exp ")" stmt {% ([, ,lident, ,lrange, ,riden, ,rrange, , cond, ,stmt]) => (new QFor(lident, lrange, riden, rrange, cond, stmt, 2)) %}
+  |
 
 functionValue->
   identifier                              {% ([id]) => ([id]) %}
@@ -120,21 +127,19 @@ value ->
   | "true"                  {% () => (new TruthValue(true)) %}
   | "false"                 {% () => (new TruthValue(false)) %}
   | literals                {% ([literal]) => (new QString(literal))%}
-  | identifier "(" functionCallValue ")" {%([id, , fcv, ]) => (new QFCall(id,fcv))%}#No implementado
+  | identifier "(" ")"      {%([id, , ]) => (new QFCall(id,[]))%}
+  | identifier "(" functionCallValue ")" {%([id, , fcv, ]) => (new QFCall(id,fcv))%}
   | identifier              {% ([id]) => (new Variable(id)) %}
   | nullvalue               {% ([id]) => (new QNull())%}
   | "#" value               {% ([, val]) => (new QCardinal(val)) %}
-  #Eliminar ambiguedad v v v si es que tiene
-  | collection "." value    {% ([list, , key]) => (new QGetKey(list,key)) %}#No Implementado
+  | collection "." value    {% ([list, , key]) => (new QGetKey(list,key)) %}
   | value "[" value "]"     {% ([value, ,index, ]) => (new QIndex(value,index)) %}
-  | value "<-" value        {% ([val, , list]) => (new QIn(val,list))%}#Eliminar ambiguedad v v v
+  | value "<-" value        {% ([val, , list]) => (new QIn(val,list))%}
   | "(" exp "if" exp "else" exp ")" {% ([, iftrue, , cond , , iffalse, ]) => (new QConditionalExp(cond, iftrue, iffalse)) %}
-  #Eliminar ambiguedad ^ ^ ^ si es que tiene
   | collection              {% id %}
-  | range {% id %}
+  | range                   {% id %}
 
 # Collections
-
 key ->
   literals                {% ([literal]) => (new QString(literal))%}
 | identifier              {% ([id]) => (new QString(id)) %}

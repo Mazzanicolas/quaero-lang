@@ -3,26 +3,23 @@ import { State } from '../interpreter/State';
 /**
   Representación de sumas.
 */
-export class QuaeroFunction implements Exp {
-  id:string;
-  val:any[];
-  ret:any;
-
-  constructor(id,val,ret) {
-    this.id = id;
-    this.val = val;
-    this.ret = ret;
+export class ExpAsStmt implements Exp {
+  exp:Exp;
+  constructor(exp) {
+    this.exp  = exp;
   }
 
   toString(): string {
-    return "";
+    //return `QFunction()`;
+    return `QExpAsStmt(No tengo ganas de poner esto)`;
   }
 
   unparse(): string {
-    return "";
+    return `QFunction`;
   }
 
   evaluate(state: State) {
+    this.exp.evaluate(state);
     return state;
   }
 }

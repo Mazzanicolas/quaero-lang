@@ -1,10 +1,11 @@
   export class State {
 
   vars: Map<string, any>;
+  customFunction: Map<string, any>;
 
   constructor() {
     this.vars = new Map<string, any>();
-    //Hacer una clase function loader
+    this.customFunction = new Map<string, any>();
   }
 
   toString(): string {
@@ -17,6 +18,18 @@
 
   set(id: string, value: any) {
     this.vars.set(id, value);
+  }
+
+  getFunction(id){
+    return this.customFunction.get(id);
+  }
+
+  setFunction(id,value){
+    this.customFunction.set(id,value);
+  }
+  
+  remove(id: string) {
+    this.vars.delete(id);
   }
 
   clone(newState:State): any {
