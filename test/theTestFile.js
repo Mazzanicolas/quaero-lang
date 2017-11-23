@@ -156,6 +156,9 @@ describe('User Functions', function(){
   it('More than one return 2: function sumarara(a,b){if(a==b){return 0;}else{return a+b;}}; foo = sumarara(2,2); >> { foo = 0 }',function(){
     assert.equal(0,main.testThis('{function sumarara(a,b) { if (a==b) { return 0; } else { return a+b; }} foo = sumarara(2,2);}').get("foo"));
   });
+  it('Empty Fnc: function f(){return 10;}; foo = f(); >> { foo = 10 }',function(){
+    assert.equal(10,main.testThis('{function f(){return 10;} foo=f();}').get("foo"));
+  });
 });
 
 describe('Quareo Functions', function(){
