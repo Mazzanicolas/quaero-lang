@@ -23,6 +23,8 @@ export class CompareLess implements Exp {
     return `(${this.lhs.unparse()} < ${this.rhs.unparse()})`;
   }
 
+  //VER ESTO!
+
   evaluate(state: State): any {
     var aux = false;
     if (this.lhs.toString()=="QSet"){
