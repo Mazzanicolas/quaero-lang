@@ -11,10 +11,9 @@ console.log("While :: REPL");
 
 var state = new State();
 var load = new Loader();
-<<<<<<< HEAD
-=======
+
 load.loadPreFunctions(state);
->>>>>>> 7d794bc2e3cdfac99a41ab03dcd4f636961ed024
+
 var TESTING = false; // < Cambiar al estado de testing
 
 export function testThis(input){
@@ -29,6 +28,7 @@ export function testThis(input){
   state = node.evaluate(state);
   return state;
 }
+
 //console.log(testThis('foo="\"\u00a1Hola\t!\"";'));
 while (!TESTING) {
   const lexer  = new MyLexer(tokens);
