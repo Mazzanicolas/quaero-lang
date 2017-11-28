@@ -164,6 +164,7 @@ range ->
       "[" value ".." value "]"   {% ([, elemA, , elemC, ]) => (new QEnumeration(elemA, null, elemC)) %}
     | "[" value "," value ".." value "]"   {% ([, elemA, , elemB, , elemC, ]) => (new QEnumeration(elemA, elemB, elemC)) %}
 
+
 collection ->
    list                     {% id %}
   | set                     {% id %}
