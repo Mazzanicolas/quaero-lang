@@ -73,7 +73,8 @@ stmtelse ->
   | "function" identifier "(" ")" "{" stmt:* "}" {% ([,id, , , ,stmt, ]) => (new QFunction(id,[],stmt)) %}
   | "function" identifier "(" functionValue ")" "{" stmt:* "}" {% ([,id, , val , , ,stmt, ]) => (new QFunction(id,val,stmt)) %}
   | "for" "(" identifier "<-" identifier ")" stmt {% ([, ,lcond, , rcond, , stmt]) => (new QFor(lcond, rcond,null,null,null,stmt, 1)) %}
-  | "for" "(" identifier "<-" range "," identifier "<-" range "," exp ")" stmt {% ([, ,lident, ,lrange, ,riden, ,rrange, , cond, ,stmt]) => (new QFor(lident, lrange, riden, rrange, cond, stmt, 2)) %}
+  | "for" "(" identifier "<-" range ")" stmt {% ([, ,lident, , lrange, , stmt]) => (new QFor(lident, lrange,null,null,null,stmt, 2)) %}
+  | "for" "(" identifier "<-" range "," identifier "<-" range "," exp ")" stmt {% ([, ,lident, ,lrange, ,riden, ,rrange, , cond, ,stmt]) => (new QFor(lident, lrange, riden, rrange, cond, stmt, 3)) %}
 
 
 functionValue->
