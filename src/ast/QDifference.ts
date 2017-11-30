@@ -24,14 +24,40 @@ export class QDifference implements Exp {
   }
 // [1,2,3]--[1,2,5]=[3]
   evaluate(state: State): any {
-    var a = this.collectionA.evaluate(state);
-    var b = this.collectionB.evaluate(state);
-    var resultado =[];
-    for (var i =0; i < a.length; i++){
-      if(b.indexOf(a[i]) === -1){
-        resultado.push (a[i]);
+    var listL = this.collectionA.evaluate(state); var listR = this.collectionB.evaluate(state);
+    if(listL instanceof Set && listR instanceof Set){
+      var valuesL = listL['$reserved$'];      var valuesR = listR['$reserved$'];
+      let qresult = new Set([...listL].filter(x => !listR.has(x)));
+      var data:any[]=[];
+      for(var i=0;i<valuesR.length;i++){
+        var elemR = valuesR[i];
+        var vr = listR[elemR];
+        qresult[elemR] = vr;
+        data.unshift(elemR);
       }
+      for(var i=0;i<valuesL.length;i++){
+        var elemL = valuesL[i];
+        var vl = listL[elemL];
+        qresult[elemL] = vl;
+        data.unshift(elemL);
+      }
+      qresult['$reserved$'] = data;
+      return qresult;
     }
-    return resultado;
+    if(listL instanceof Array && listR instanceof Array){
+      for(var i=0;i<listR.length;i++){
+        for(var j=0;j<listL.length;j++){
+          if(listR[i] instanceof Array && listL[j] instanceof Array){
+            if(listR[i].toString() == listL[j].toString()){ listL.splice(j, 1); }
+          }
+          if(listR[i]==listL[j]){
+            listL.splice(j, 1);
+            break;
+          }
+        }
+      } return listL;
+    }
+    console.log("Esta operacion solo es valiada para Sets o Listas");
+    return undefined;
   }
 }

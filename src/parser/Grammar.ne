@@ -3,49 +3,11 @@
 @{%
 
 import {
-  Addition,
-  Assignment,
-  CompareEqual,
-  CompareNotEqual,
-  CompareLessOrEqual,
-  CompareLess,
-  CompareGreatOrEqual,
-  CompareGreat,
-  Conjunction,
-  Disjunction,
-  IfThenElse,
-  IfThen,
-  Index,
-  Multiplication,
-  Division,
-  Negation,
-  Numeral,
-  QString,
-  Sequence,
-  Substraction,
-  TruthValue,
-  Variable,
-  QNull,
-  QKeyValue,
-  QList,
-  QSet,
-  QNNegation,
-  QCardinal,
-  QIn,
-  QIndex,
-  QIntersection,
-  QConcatenation,
-  QUnion,
-  QDifference,
-  QGetKey,
-  QFunction,
-  QFReturn,
-  QFCall,
-  QConditionalExp,
-  QFor,
-  ExpAsStmt,
-  WhileDo,
-  QEnumeration
+  Addition,Assignment,CompareEqual,CompareNotEqual,CompareLessOrEqual,CompareLess,CompareGreatOrEqual,CompareGreat,
+  Conjunction,Disjunction,IfThenElse,IfThen,Multiplication,Division,Negation,Numeral,QString,Sequence,Substraction,
+  TruthValue,Variable,QNull,QKeyValue,QList,QSet,QNNegation,QCardinal,QIn,QIndex,QIntersection,QConcatenation,
+  QUnion,QDifference,QGetKey,QFunction,QFReturn,QFCall,QFor,ExpAsStmt,WhileDo,QCompLst,QCompSet,QEnumeration,
+  QEnumerationSet,ExecuteOrder66,QConditional,LoadFile
 } from '../ast/AST';
 
 import { tokens } from './Tokens';
@@ -60,9 +22,11 @@ const lexer = new MyLexer(tokens);
 # Statements
 
 stmt ->
-    stmtelse                              {% id %}
-  | "if" "(" exp ")" stmt                 {% ([, , cond, , thenBody]) => (new IfThen(cond, thenBody)) %}
+    stmtelse                              {% id %} #Si se baja y agrega | esto se activa el modo "Funciones al principio" 1/3
+  | ">>>" function:* ">>>" stmt "<<<"     {% ([,fun,,code,]) => (new ExecuteOrder66(fun,code)) %} #Si sube esto y saca el | se activa el modo "Funciones al principio" 2/3
+  | "if" "(" exp ")" stmt                 {% ([, , cond, , thenBody]) => (new IfThen(cond, thenBody)) %}#Usar llaves para los bloques
   | "return" exp ";"                      {% ([, exp]) => (new QFReturn(exp)) %}
+  | "@load" literals  ";"                 {% ([,file,]) => (new LoadFile(file)) %}
 
 stmtelse ->
     identifier "=" exp ";"                {% ([id, , exp, ]) => (new Assignment(id, exp)) %}
@@ -70,12 +34,12 @@ stmtelse ->
   | "{" stmt:* "}"                        {% ([, statements, ]) => (new Sequence(statements)) %}
   | "while" exp "do" stmt                 {% ([, cond, , body]) => (new WhileDo(cond, body)) %}
   | "if" "(" exp ")" stmtelse "else" stmt {% ([, ,cond, , thenBody, , elseBody]) => (new IfThenElse(cond, thenBody, elseBody)) %}
-  | "function" identifier "(" ")" "{" stmt:* "}" {% ([,id, , , ,stmt, ]) => (new QFunction(id,[],stmt)) %}
-  | "function" identifier "(" functionValue ")" "{" stmt:* "}" {% ([,id, , val , , ,stmt, ]) => (new QFunction(id,val,stmt)) %}
-  | "for" "(" identifier "<-" identifier ")" stmt {% ([, ,lcond, , rcond, , stmt]) => (new QFor(lcond, rcond,null,null,null,stmt, 1)) %}
-  | "for" "(" identifier "<-" range ")" stmt {% ([, ,lident, , lrange, , stmt]) => (new QFor(lident, lrange,null,null,null,stmt, 2)) %}
-  | "for" "(" identifier "<-" range "," identifier "<-" range "," exp ")" stmt {% ([, ,lident, ,lrange, ,riden, ,rrange, , cond, ,stmt]) => (new QFor(lident, lrange, riden, rrange, cond, stmt, 3)) %}
+  | "for" "(" lstExp ")" stmt            {% ([,,lstExp,,stmt]) => (new QFor(lstExp,stmt)) %}
+  | function                              {% id %} #Si se comenta esto se activa el modo "Funciones al principio" 3/3
 
+function ->
+   "function" identifier "(" ")" "{" stmt:* "}" {% ([,id, , , ,stmt, ]) => (new QFunction(id,[],stmt)) %}
+  | "function" identifier "(" functionValue ")" "{" stmt:* "}" {% ([,id, , val , , ,stmt, ]) => (new QFunction(id,val,stmt)) %}
 
 functionValue->
   identifier                              {% ([id]) => ([id]) %}
@@ -115,7 +79,11 @@ muldiv ->
   | muldiv "/" neg          {% ([lhs, , rhs]) => (new Division(lhs, rhs)) %}
   | muldiv "/\\" neg        {% ([lhs, ,rhs]) => (new QIntersection(lhs,rhs)) %}
   | muldiv "\\/" neg        {% ([lhs, ,rhs]) => (new QUnion(lhs,rhs)) %}
-  | neg                     {% id %}
+  | quinn                   {% id %}
+
+quinn ->
+   exp "<-" value          {% ([val, , list]) => (new QIn(val,list))%}
+   | neg                   {% id %}
 
 neg ->
     "!" value               {% ([, exp]) => (new Negation(exp)) %}
@@ -127,67 +95,71 @@ value ->
   | number                  {% ([num]) => (new Numeral(num)) %}
   | "true"                  {% () => (new TruthValue(true)) %}
   | "false"                 {% () => (new TruthValue(false)) %}
+  | "(" value "if" exp "else" value ")" {% ([,vt,,b,,vf,]) => (new QConditional(vt,b,vf))%}
   | literals                {% ([literal]) => (new QString(literal))%}
+  | value "[" neg "]"     {% ([value, ,index, ]) => (new QIndex(value,index)) %}
   | identifier "(" ")"      {%([id, , ]) => (new QFCall(id,[]))%}
   | identifier "(" functionCallValue ")" {%([id, , fcv, ]) => (new QFCall(id,fcv))%}
   | identifier              {% ([id]) => (new Variable(id)) %}
   | nullvalue               {% ([id]) => (new QNull())%}
   | "#" value               {% ([, val]) => (new QCardinal(val)) %}
-  | collection "." value    {% ([list, , key]) => (new QGetKey(list,key)) %}
-  | value "[" value "]"     {% ([value, ,index, ]) => (new QIndex(value,index)) %}
-  | value "<-" value        {% ([val, , list]) => (new QIn(val,list))%}
-  | "(" exp "if" exp "else" exp ")" {% ([, iftrue, , cond , , iffalse, ]) => (new QConditionalExp(cond, iftrue, iffalse)) %}
+  | exp "." value           {% ([exp, , value]) => (new QGetKey(exp,value)) %}
   | collection              {% id %}
   | range                   {% id %}
+  |"{" exp "for" lstExp "}" {% ([,exp,,lstExp,]) => (new QCompSet(exp,lstExp)) %}
+  |"[" exp "for" lstExp "]" {% ([,exp,,lstExp,]) => (new QCompLst(exp,lstExp)) %}
 
+lstExp ->
+   exp                     {% ([exprs]) => ([exprs]) %}
+  | exp "," lstExp         {% ([exprs,,lstExp]) => {lstExp.push(exprs);return lstExp;}%}
 # Collections
 key ->
   literals                {% ([literal]) => (new QString(literal))%}
 | identifier              {% ([id]) => (new QString(id)) %}
 
 list->
-   "[" "]"                  {% ([id]) => (new QList([])) %}
-  | "[" elements "]"        {% ([,elem, ]) => (elem) %}
+   "[" "]"                {% ([id]) => (new QList([])) %}
+  | "[" elements "]"      {% ([,elem, ]) => (elem) %}
 
 elements ->
         collectionValue "," elements {% ([element, ,elements]) => (elements.push(element)) %}
-      | collectionValue       {% ([element]) => (new QList([element])) %}
+      | collectionValue              {% ([element]) => (new QList([element])) %}
 
 set ->
-   "{" "}"                   {% ([, values, ]) => (new QSet(values)) %}
-  | "{" elementSet "}"         {% ([,elem, ]) => (elem) %}
+   "{" "}"                {% ([, ]) => (new QSet([])) %}
+  | "{" elementSet "}"    {% ([,elem, ]) => (elem) %}
 
 elementSet ->
       collectionValue "," elementSet {% ([elem, ,elementSet]) => (elementSet.push(elem)) %}
-    | collectionValue       {% ([elem]) => (new QSet([elem])) %}
+    | collectionValue                {% ([elem]) => (new QSet([elem])) %}
 
 range ->
-      "[" value ".." value "]"   {% ([, elemA, , elemC, ]) => (new QEnumeration(elemA, null, elemC)) %}
-    | "[" value "," value ".." value "]"   {% ([, elemA, , elemB, , elemC, ]) => (new QEnumeration(elemA, elemB, elemC)) %}
-
-
+      "[" exp ".." exp "]"           {% ([, elemA, , elemC, ]) => (new QEnumeration(elemA, null, elemC)) %}
+    | "[" exp "," exp ".." exp "]"   {% ([, elemA, , elemB, , elemC, ]) => (new QEnumeration(elemA, elemB, elemC)) %}
+    | "{" exp ".." exp "}"           {% ([, elemA, , elemC, ]) => (new QEnumerationSet(elemA, null, elemC)) %}
+    | "{" exp "," exp ".." exp "}"   {% ([, elemA, , elemB, , elemC, ]) => (new QEnumerationSet(elemA, elemB, elemC)) %}
 collection ->
-   list                     {% id %}
-  | set                     {% id %}
+   list                   {% id %}
+  | set                   {% id %}
 
 collectionValue->
-   value                   {% id %}
-  | key ":" exp            {% ([key, ,value]) => (new QKeyValue(key,value))%}
+   exp                    {% id %}
+  | key ":" exp           {% ([key, ,value]) => (new QKeyValue(key,value))%}
 
 # Atoms
 
 identifier ->
-    %identifier             {% ([id]) => (id.value) %}
+    %identifier           {% ([id]) => (id.value) %}
 
 number ->
-    %integer                {% ([id]) => (id.value) %}
-  | %hex                    {% ([id]) => (id.value) %}
-  | %float                  {% ([id]) => (id.value) %}
-  | "Infinity"              {% ([id]) => (Number.POSITIVE_INFINITY) %}
-  | "NaN"                   {% ([id]) => (NaN) %}
+    %integer              {% ([id]) => (id.value) %}
+  | %hex                  {% ([id]) => (id.value) %}
+  | %float                {% ([id]) => (id.value) %}
+  | "Infinity"            {% ([id]) => (Number.POSITIVE_INFINITY) %}
+  | "NaN"                 {% ([id]) => (NaN) %}
 
 literals ->
-  %literal                  {% ([id]) => (id.value) %}
+  %literal                {% ([id]) => (JSON.parse(id.value)) %}
 
 nullvalue ->
-  "null"                    {% id %}
+  "null"                  {% id %}

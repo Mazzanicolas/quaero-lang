@@ -20,6 +20,10 @@ export class QCardinal implements Exp {
   }
 
   evaluate(state: State): any {
-    return this.value.evaluate(state).length;
+    var item = this.value.evaluate(state);
+    if(item instanceof Array){ return item.length; }
+    else if(item instanceof Set)  { return item.size;  }
+    else if(typeof item === 'string')  { return item.length; }
+    else { console.log("Lista o Set no valido retornando undefined"); return undefined;}
   }
 }

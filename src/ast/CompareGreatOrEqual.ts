@@ -23,13 +23,26 @@ export class CompareGreatOrEqual implements Exp {
   }
 
   evaluate(state: State): any {
-    if (Array.isArray(this.lhs.evaluate(state)) && Array.isArray(this.rhs.evaluate(state))){
-      for (var i = 0; i < this.lhs.evaluate(state).length; i ++){
-        for (var j = 0; j < this.rhs.evaluate(state).length; j ++){
-          if (this.lhs.evaluate(state)[i] == this.rhs.evaluate(state)[j]){
-          }
-        }
-      }
+    var listL   = this.lhs.evaluate(state); var listR   = this.rhs.evaluate(state);
+    if (listL instanceof Array && listR instanceof Array){
+      var valuesL = listL['$reserved$'];      var valuesR = listR['$reserved$'];
+      //if (this.lhs.evaluate(state) instanceof Set && this.rhs.evaluate(state) instanceof Set){listL=[...listL].reverse();listR=[...listR].reverse();}//No hace falta el reverse pero we, mas facil para debugear.
+      var until = Math.min(listL.length,listR.length);
+      for(var i=0;i<until;i++){if(!(listL[i]>=listR[i])){ return false; } }
+      return true;
     }
+    if (listL instanceof Set && listR instanceof Set){
+      var valuesL = listL['$reserved$'];      var valuesR = listR['$reserved$'];
+      if(valuesL.length != valuesR.length || listL.size != listR.size){ return false; }
+      var flag =-1;
+      for(var i=0; i<valuesR.length;i++){ //Separar en un metodo
+        for(var j=0; j<valuesL.length;j++){
+          if(valuesL[i]==valuesR[j]){ flag=j; }
+        } if(flag<0){ return false; } else { if(listL[valuesL[i]]!=listR[valuesR[flag]]){ return false; } else { flag=-1; } }
+      } var result = true;
+      listR.forEach(function(rhsE){if(!listL.has(rhsE)){result = false;}});
+      return result;
+    }
+    return listL>=listR;
   }
 }

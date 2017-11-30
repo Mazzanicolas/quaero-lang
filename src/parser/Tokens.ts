@@ -19,6 +19,8 @@ export const tokens = {
   '+':          '+',
   '-':          '-',
   ';':          ';',
+  '>>>':        '>>>',
+  '<<<':        '<<<',
   ',':          ',',
   '<=':         '<=',
   '>=':         '>=',
@@ -32,8 +34,8 @@ export const tokens = {
   '#':          '#',
   '..':         '..',
   '.':          '.',
-
   // Keywords
+  '@load':      '@load',
   'do':         'do',
   'while':      'while',
   'if':         'if',
@@ -49,7 +51,7 @@ export const tokens = {
   'for':        'for',
 
   // Atoms
-  literal:      { match:/"(?:\\["bfnrt\/\\]|\\u[a-fA-F0-9]{4}|[^"\\])*"/,value: (x: string) => (JSON.parse(x)) },
+  literal:      { match:/"(?:\\["bfnrt\/\\]|\\u[a-fA-F0-9]{4}|[^"\\])*"/,value: (x: string) => (x) },
   hex:          { match: /0[xX][0-9a-f-A-F]+/, value: (x: string) => (parseInt(x,16)) },
   float:        { match: /[0-9]+(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?/, value: (x: string) => (parseFloat(x)) },
   integer:      { match: /[0-9]+/, value: (x: string) => (parseFloat(x)) },

@@ -13,7 +13,7 @@ export class QList implements Exp {
   }
 
   toString(): string {
-    return `QList()`;
+    return `${Array.from(this.elementList.entries()).map(([key]) => (`${key}`))}`;
   }
 
   unparse(): string {
@@ -27,9 +27,26 @@ export class QList implements Exp {
 
   evaluate(state: State) {
     var qresult:any[]=[];
+    var data:any[]=[];
     for(var i=0;i<this.elementList.length;i++){
-      qresult.push(this.elementList[i].evaluate(state));
+      if(this.elementList[i].evaluate(state) instanceof Map){
+        var elem = this.elementList[i].evaluate(state);
+        var v = elem.get('v');
+        qresult[elem.get('k')] = v;
+        data.push(elem.get('k'));
+        qresult.push(v);
+      } else {
+        qresult.push(this.elementList[i].evaluate(state));
+      }
     }
-    return qresult.reverse();
+    if(QList.hasDuplicates(data)){ console.log(" Elementos duplicados. Retornando: []");return []; }
+    qresult = qresult.reverse()
+    qresult['$reserved$'] = data.reverse();
+    //console.log(qresult);
+    return qresult;
+  }
+
+  static hasDuplicates(array) {
+    return (new Set(array)).size !== array.length;
   }
 }

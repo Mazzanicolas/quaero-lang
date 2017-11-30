@@ -26,10 +26,21 @@ export class QSet implements Exp {
   }
 
   evaluate(state: State) {// [a:2,"r":true]
-    var qresult:any[]=[];
+    var qresult = new Set(qresult)//:any[]=[];
+    var data:any[]=[];
     for(var i=0;i<this.elementList.length;i++){
-      qresult.push(this.elementList[i].evaluate(state));
+      if(this.elementList[i].evaluate(state) instanceof Map){
+        var elem = this.elementList[i].evaluate(state);
+        var v = elem.get('v');
+        qresult[elem.get('k')] = v;
+        data.push(elem.get('k'));
+        qresult.add(v);
+      } else {
+        qresult.add(this.elementList[i].evaluate(state));
+      }
     }
-    return qresult.reverse();
+    qresult['$reserved$'] = data.reverse();
+    return qresult;
   }
+
 }

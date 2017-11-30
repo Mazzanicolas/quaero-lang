@@ -1,0 +1,6 @@
+function potencia(b,e){
+  r = 1;
+  for (_ <- [1..e]) r = r * b;
+  return r;
+  }
+p=potencia(2,2);

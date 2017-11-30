@@ -5,7 +5,7 @@ import { Numeral } from './Numeral';
 /**
   Representación de sumas.
 */
-export class QEnumeration implements Exp {
+export class QEnumerationSet implements Exp {
 
   eleA:Exp;
   eleB:Exp;
@@ -40,7 +40,7 @@ export class QEnumeration implements Exp {
         qresult.push(i);
       }
     }
-    return qresult;
+    return new Set(qresult);
   }
 
 

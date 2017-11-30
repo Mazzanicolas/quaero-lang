@@ -1,8 +1,9 @@
-import { State } from '../interpreter/State';
+import { State } from '../interpreter/State'
 export class Loader {
 
   constructor(){
   }
+
 
   loadPreFunctions(state: State){
     state.setFunction("print",  function(line){console.log(line.evaluate(state));return;});
@@ -11,12 +12,12 @@ export class Loader {
     state.setFunction("string", function(value){return value.evaluate(state).toString();});
     state.setFunction("int",    function(value){return parseInt(value.evaluate(state));});
     state.setFunction("number", function(value){return parseFloat(value.evaluate(state));});
-    state.setFunction("boolean",function(value){var v = value.evaluate(state);if(Loader.isInList(v,[0,null,"\"\""])){return false;}else{return true;}});
+    state.setFunction("boolean",function(value){var v = value.evaluate(state);if(Loader.isInList(v,[0,null])){return false;}else{return !!v;}});
     return state;
   }
 
   static isInList(value:any, array:any) {
-    if(value instanceof Array && (value.length == 0) || value instanceof Object && Loader.isEmpty(value)){return true;}
+    if(value instanceof Array && (value.length == 0) || value instanceof Object && Loader.isEmpty(value) || value instanceof Set && value.size==0){return true;}
     return array.indexOf(value) > -1;
   }
 
@@ -24,7 +25,6 @@ export class Loader {
     for(var key in obj) {
         if(obj.hasOwnProperty(key))
             return false;
-    }
-    return true;
-}
+    } return true;
+  }
 }

@@ -1,7 +1,6 @@
 import { Exp } from './ASTNode';
 import { State } from '../interpreter/State';
 import { QList } from '../ast/QList';
-
 /**
   Representación de las comparaciones por menor o igual.
 */
@@ -23,47 +22,26 @@ export class CompareLess implements Exp {
     return `(${this.lhs.unparse()} < ${this.rhs.unparse()})`;
   }
 
-  //VER ESTO!
-
-  evaluate(state: State): any {
-    var aux = false;
-    if (this.lhs.toString()=="QSet"){
-      if (Array.isArray(this.lhs.evaluate(state)) && Array.isArray(this.rhs.evaluate(state)) ){
-        for (var i = 0; i < this.lhs.evaluate(state).length; i ++){
-          for (var j = 0; j < this.rhs.evaluate(state).length; j ++){
-              if (this.lhs.evaluate(state)[i] == this.rhs.evaluate(state)[j]){
-                aux = true;
-              }
-          }
-          if (aux == false){
-            return false;
-          }
-        }
-        return true;
-      }
-      else{
-        return JSON.stringify(this.lhs) < JSON.stringify(this.rhs);
-        }
-      }
-      else {
-        if (Array.isArray(this.lhs.evaluate(state)) && Array.isArray(this.rhs.evaluate(state)) ){
-          for (var i = 0; i < this.lhs.evaluate(state).length; i ++){
-            for (var j = 0; j < this.rhs.evaluate(state).length; j ++){
-              if(i==j){
-                if (this.lhs.evaluate(state)[i] == this.rhs.evaluate(state)[j]){
-                  aux = true;
-                }
-              }
-            }
-            if (aux == false){
-              return false;
-            }
-          }
-          return true;
-        }
-        else{
-          return JSON.stringify(this.lhs) < JSON.stringify(this.rhs);
-          }
-        }
+  evaluate(state: State): any {// Compara solo por key:value los sets
+    var listL   = this.lhs.evaluate(state); var listR   = this.rhs.evaluate(state);
+    if (listL instanceof Array && listR instanceof Array){
+      var valuesL = listL['$reserved$'];      var valuesR = listR['$reserved$'];
+      var until = Math.min(listL.length,listR.length);
+      for(var i=0;i<until;i++){if(!(listL[i]<listR[i])){ return false; } }
+      return true;
     }
+    if (listL instanceof Set && listR instanceof Set){
+      var valuesL = listL['$reserved$'];      var valuesR = listR['$reserved$'];
+      if(valuesL.length > valuesR.length || listL.size > listR.size){ return false; }
+      var flag =-1;
+      for(var i=0; i<valuesL.length;i++){ //Separar en un metodo
+        for(var j=0; j<valuesR.length;j++){
+          if(valuesL[i]==valuesR[j]){ flag=j; }
+        } if(flag<0){ return false; } else { if(listL[valuesL[i]]!=listR[valuesR[flag]]){ return false; } else { flag=-1; } }
+      } var result = true;
+      listL.forEach(function(lhsE){if(!listR.has(lhsE)){result = false;}});
+      return result;
+    }
+    return listL<listR;
+  }
 }
